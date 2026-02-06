@@ -1,0 +1,13 @@
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    padding: 4rem;
+}
