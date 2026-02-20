@@ -89,3 +89,7 @@
     padding: 0.2rem 0.6rem;
     border-radius: 4px;
 }
+.highlight-card {
+    border-color: var(--accent-primary);
+    box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.4);
+}

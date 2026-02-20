@@ -1,3 +1,74 @@
+.schedule-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.current-schedule-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    text-align: left;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.filters-panel {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+}
+
+.filter-type-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.filter-button {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-button:hover,
+.filter-button.active {
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+    background: rgba(139, 92, 246, 0.18);
+}
+
+.filter-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.filter-input {
+    width: fit-content;
+    min-width: 190px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: var(--text-primary);
+    padding: 0.45rem 0.65rem;
+}
+
 .schedule-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -7,7 +78,7 @@
 
 .loading {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
-    padding: 4rem;
+    padding: 2rem;
 }

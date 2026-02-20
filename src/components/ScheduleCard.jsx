@@ -2,11 +2,11 @@ import React from 'react';
 import { formatDatePT } from '../utils/dateUtils';
 import './ScheduleCard.css';
 
-const ScheduleCard = ({ date, distribution }) => {
+const ScheduleCard = ({ date, distribution, highlight = false }) => {
   const { food, drink, free } = distribution;
 
   return (
-    <div className="schedule-card">
+    <div className={`schedule-card ${highlight ? 'highlight-card' : ''}`.trim()}>
       <div className="card-header">
         <h3 className="card-date">{formatDatePT(new Date(date))}</h3>
         <span className="card-weekday">Sexta-feira</span>
