@@ -8,7 +8,7 @@ const ScheduleCard = ({ date, distribution }) => {
   return (
     <div className="schedule-card">
       <div className="card-header">
-        <h3 className="card-date">{formatDatePT(new Date(date))}</h3>
+        <h3 className="card-date">{formatDatePT(new Date(date + 'T00:00:00'))}</h3>
         <span className="card-weekday">Sexta-feira</span>
       </div>
       

@@ -5,8 +5,11 @@
  * @returns {Date[]} Array of Date objects
  */
 export const getDozenFridays = (startDateStr, endDateStr) => {
-    const start = new Date(startDateStr);
-    const end = new Date(endDateStr);
+    // Append T00:00:00 so JS parses as LOCAL time, not UTC.
+    // Without this, 'YYYY-MM-DD' is treated as UTC midnight, which in UTC-3
+    // resolves to the previous day — causing a one-day date shift.
+    const start = new Date(startDateStr + 'T00:00:00');
+    const end = new Date(endDateStr + 'T00:00:00');
     const fridays = [];
 
     // Normalize to start of day

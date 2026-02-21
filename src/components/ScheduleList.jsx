@@ -4,7 +4,11 @@ import './ScheduleList.css';
 
 const ScheduleList = ({ schedules }) => {
   if (!schedules || schedules.length === 0) {
-    return <div className="loading">Carregando escalas...</div>;
+    return (
+      <div className="loading">
+        Nenhuma escala encontrada para o período selecionado.
+      </div>
+    );
   }
 
   return (
