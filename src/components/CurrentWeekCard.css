@@ -1,0 +1,162 @@
+.current-week-wrapper {
+    margin-bottom: 3rem;
+    text-align: left;
+}
+
+.current-week-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.7);
+    }
+}
+
+.current-week-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(16px);
+    position: relative;
+    /* gradient border via pseudo-element */
+    border: 1.5px solid transparent;
+    background-clip: padding-box;
+    box-shadow:
+        0 0 0 1.5px transparent,
+        0 20px 60px -10px rgba(139, 92, 246, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    /* Gradient border trick */
+    background-image:
+        linear-gradient(var(--bg-color), var(--bg-color)),
+        linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    border: 2px solid transparent;
+}
+
+.current-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.current-card-date {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 0.25rem 0;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.current-card-weekday {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.days-pill {
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: var(--accent-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    align-self: flex-start;
+}
+
+.current-card-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.current-group h4 {
+    margin: 0 0 0.6rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.current-group .group-count {
+    font-weight: 400;
+    opacity: 0.6;
+    font-size: 0.9rem;
+}
+
+.current-group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.current-group li {
+    padding: 0.25rem 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.current-group.food-group h4 {
+    color: var(--food-color);
+}
+
+.current-group.drink-group h4 {
+    color: var(--drink-color);
+}
+
+.current-group.free-group h4 {
+    color: var(--free-color);
+}
+
+.inline-list-current {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.inline-list-current li {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}

@@ -18,7 +18,7 @@ export const generateBalancedSchedule = (dates) => {
     let schedule = dates.map(date => {
         const shuffled = [...people].sort(() => Math.random() - 0.5);
         return {
-            date: date.toISOString(),
+            date: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
             assignments: {
                 [people[0]]: 'food', [people[1]]: 'food', [people[2]]: 'food',
                 [people[3]]: 'food', [people[4]]: 'food', [people[5]]: 'food',
