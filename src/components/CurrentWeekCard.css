@@ -160,3 +160,35 @@
     border-radius: 6px;
     font-size: 0.85rem;
 }
+
+/* ── Name chip shared styles (A2) ── */
+.current-week-card .name-chip {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-family);
+    font-size: 0.95rem;
+    padding: 0.15rem 0.35rem;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: var(--transition);
+    text-align: left;
+    display: inline-block;
+}
+
+.current-week-card .name-chip:hover {
+    color: var(--accent-primary);
+    background: rgba(139, 92, 246, 0.12);
+}
+
+.current-week-card .name-chip--active {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.current-week-card .name-chip--inline {
+    font-size: 0.85rem;
+}
+/* ─────────────────────────────── */

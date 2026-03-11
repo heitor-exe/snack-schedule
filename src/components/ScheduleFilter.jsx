@@ -1,24 +1,30 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useTransition } from 'react';
 import { formatDatePT } from '../utils/dateUtils';
 import './ScheduleFilter.css';
 
 /**
- * ScheduleFilter — filtro por semana ou mês
- * @param {Object[]} schedules - lista completa de escalas
- * @param {Function} onFilterChange - callback com a lista filtrada
+ * ScheduleFilter — filtro por data (mês ou semana específica).
+ * A busca por nome foi extraída para o componente SearchBar.
+ *
+ * Props:
+ *   schedules      {Object[]}  escalas próximas (alimenta os selects)
+ *   onFilterChange {Function}  callback com lista filtrada (null = sem filtro)
  */
 const ScheduleFilter = ({ schedules, onFilterChange }) => {
   const [mode, setMode] = useState('month'); // 'week' | 'month'
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
+  const [, startTransition] = useTransition();
 
-  // --- Derive available options from schedules ---
-  const weekOptions = useMemo(() => {
-    return schedules.map((s) => ({
-      value: s.date,
-      label: formatDatePT(new Date(s.date + 'T00:00:00')),
-    }));
-  }, [schedules]);
+  // --- Opções derivadas das escalas disponíveis ---
+  const weekOptions = useMemo(
+    () =>
+      schedules.map((s) => ({
+        value: s.date,
+        label: formatDatePT(new Date(s.date + 'T00:00:00')),
+      })),
+    [schedules],
+  );
 
   const monthOptions = useMemo(() => {
     const seen = new Set();
@@ -28,34 +34,32 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
       if (!seen.has(key)) {
         seen.add(key);
-        const label = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(d);
+        const label = new Intl.DateTimeFormat('pt-BR', {
+          month: 'long',
+          year: 'numeric',
+        }).format(d);
         opts.push({ value: key, label: label.charAt(0).toUpperCase() + label.slice(1) });
       }
     });
     return opts;
   }, [schedules]);
 
-  // --- Apply filter whenever selection changes ---
+  // --- Aplicar filtro de data ---
   const applyFilter = (newMode, week, month) => {
-    if (newMode === 'week') {
-      if (!week) {
-        onFilterChange(null);
-        return;
+    startTransition(() => {
+      if (newMode === 'week') {
+        onFilterChange(week ? schedules.filter((s) => s.date === week) : null);
+      } else {
+        if (!month) { onFilterChange(null); return; }
+        onFilterChange(
+          schedules.filter((s) => {
+            const d = new Date(s.date + 'T00:00:00');
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            return key === month;
+          }),
+        );
       }
-      onFilterChange(schedules.filter((s) => s.date === week));
-    } else {
-      if (!month) {
-        onFilterChange(null);
-        return;
-      }
-      onFilterChange(
-        schedules.filter((s) => {
-          const d = new Date(s.date + 'T00:00:00');
-          const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-          return key === month;
-        }),
-      );
-    }
+    });
   };
 
   const handleModeChange = (m) => {
@@ -86,17 +90,19 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
   return (
     <div className="schedule-filter">
       <div className="filter-header">
-        <span className="filter-label">🔍 Buscar escala</span>
+        <span className="filter-label">📅 Filtrar por data</span>
         <div className="filter-tabs">
           <button
             className={`filter-tab ${mode === 'month' ? 'active' : ''}`}
             onClick={() => handleModeChange('month')}
+            type="button"
           >
             Por Mês
           </button>
           <button
             className={`filter-tab ${mode === 'week' ? 'active' : ''}`}
             onClick={() => handleModeChange('week')}
+            type="button"
           >
             Por Semana
           </button>
@@ -113,9 +119,7 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
           >
             <option value="">Selecione o mês...</option>
             {monthOptions.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
+              <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
         ) : (
@@ -127,15 +131,13 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
           >
             <option value="">Selecione a sexta-feira...</option>
             {weekOptions.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
+              <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
         )}
 
         {hasFilter && (
-          <button className="filter-clear-btn" onClick={handleClear}>
+          <button className="filter-clear-btn" onClick={handleClear} type="button">
             ✕ Limpar
           </button>
         )}

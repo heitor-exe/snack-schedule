@@ -37,3 +37,111 @@
   color: var(--text-secondary);
   padding: 5rem 2rem;
 }
+
+/* ── Section wrappers ───────────── */
+.schedule-section {
+  margin-top: 3rem;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  padding-left: 0.25rem;
+}
+
+.section-title.upcoming {
+  background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-title.past {
+  color: var(--text-secondary);
+}
+
+.past-section {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+/* ─────────────────────────────── */
+
+/* ── Past-section toggle button ── */
+.past-toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.past-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.4rem;
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  transition: var(--transition);
+  outline: none;
+  letter-spacing: 0.01em;
+}
+
+.past-toggle-btn:hover {
+  background: rgba(139, 92, 246, 0.12);
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+  box-shadow: 0 0 18px -4px rgba(139, 92, 246, 0.35);
+}
+
+.past-toggle-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+.past-toggle-btn.open {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.4);
+  color: var(--text-primary);
+}
+
+.past-toggle-icon {
+  font-size: 0.65rem;
+  transition: transform 0.25s ease;
+  display: inline-block;
+}
+
+.past-toggle-btn.open .past-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.past-toggle-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  letter-spacing: 0;
+}
+
+.past-toggle-btn:hover .past-toggle-count,
+.past-toggle-btn.open .past-toggle-count {
+  background: rgba(139, 92, 246, 0.25);
+  color: var(--text-primary);
+}
+/* ─────────────────────────────── */
