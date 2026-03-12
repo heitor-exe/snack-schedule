@@ -1,13 +1,20 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import './App.css';
 import SearchBar from './components/SearchBar';
 import ScheduleList from './components/ScheduleList';
 import CurrentWeekCard from './components/CurrentWeekCard';
 import ScheduleFilter from './components/ScheduleFilter';
+import MemberSelector from './components/MemberSelector';
 import { getDozenFridays } from './utils/dateUtils';
 import { generateBalancedSchedule } from './utils/scheduler';
 import { filterByName } from './utils/filterUtils';
 import { supabase } from './services/supabaseClient';
+import {
+  MEMBER_STORAGE_KEY,
+  getUniqueMembers,
+  getRoleForSchedule,
+  getRoleLabel,
+} from './utils/userUtils';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -33,6 +40,12 @@ function App() {
   const [filteredSchedules, setFilteredSchedules] = useState(null); // null = sem filtro de data
   const [showPast, setShowPast] = useState(false);
   const pastSectionRef = useRef(null);
+  const [selectedMember, setSelectedMember] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return window.localStorage.getItem(MEMBER_STORAGE_KEY) ?? '';
+  });
+  const [selectorOpen, setSelectorOpen] = useState(false);
+  const [hasAutoPrompted, setHasAutoPrompted] = useState(false);
 
   // ── Fetch / generate schedules ────────────────────────────────
   useEffect(() => {
@@ -102,6 +115,29 @@ function App() {
         })
       : upcomingSchedules;
 
+  const allMembers = useMemo(() => getUniqueMembers(schedules), [schedules]);
+  const userRoleThisWeek =
+    selectedMember && currentSchedule
+      ? getRoleForSchedule(currentSchedule, selectedMember)
+      : null;
+  const identityRoleLabel = getRoleLabel(userRoleThisWeek);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (selectedMember) {
+      window.localStorage.setItem(MEMBER_STORAGE_KEY, selectedMember);
+    } else {
+      window.localStorage.removeItem(MEMBER_STORAGE_KEY);
+    }
+  }, [selectedMember]);
+
+  useEffect(() => {
+    if (!selectedMember && allMembers.length > 0 && !hasAutoPrompted) {
+      setSelectorOpen(true);
+      setHasAutoPrompted(true);
+    }
+  }, [selectedMember, allMembers, hasAutoPrompted]);
+
   // ── Handlers ──────────────────────────────────────────────────
   const handleFilterChange = useCallback((result) => {
     setFilteredSchedules(result);
@@ -138,12 +174,53 @@ function App() {
     if (val) setFilteredSchedules(null);
   }, []);
 
+  const handleMemberSelect = useCallback(
+    (name) => {
+      setSelectedMember(name);
+      setSelectorOpen(false);
+      setSearchQuery(name);
+    },
+    [setSearchQuery]
+  );
+
+  const handleClearSelection = useCallback(() => {
+    setSelectedMember('');
+    setSearchQuery('');
+    setSelectorOpen(true);
+  }, [setSearchQuery]);
+
   // ── Render ────────────────────────────────────────────────────
   return (
     <div className="container">
       <header className="header">
-        <h1 className="title">Escala do Lanche</h1>
-        <p className="subtitle">Célula de Jovens - Sexta-feira</p>
+        <div className="header-title">
+          <h1 className="title">Escala do Lanche</h1>
+          <p className="subtitle">Célula de Jovens - Sexta-feira</p>
+        </div>
+        <div className="identity-panel">
+          <div>
+            <p className="identity-title">
+              {selectedMember ? `Você é ${selectedMember}` : 'Identifique-se na escala'}
+            </p>
+            <p className="identity-subtitle">
+              {selectedMember
+                ? identityRoleLabel
+                  ? `Função da semana: ${identityRoleLabel}`
+                  : 'Sem escala ativa esta semana'
+                : 'Selecione seu nome para destaques imediatos'}
+            </p>
+          </div>
+          <div className="identity-actions">
+            <button className="identity-btn" type="button" onClick={() => setSelectorOpen(true)}>
+              {selectedMember ? 'Trocar pessoa' : 'Identificar meu nome'}
+            </button>
+            {selectedMember && (
+              <button className="identity-link" type="button" onClick={handleClearSelection}>
+                Limpar identificação
+              </button>
+            )}
+          </div>
+        </div>
       </header>
 
       <main>
@@ -176,6 +253,7 @@ function App() {
                       isPast={false}
                       onNameClick={handleNameClick}
                       activeQuery={searchQuery}
+                      selectedMember={selectedMember}
                     />
                   </section>
                 )}
@@ -204,6 +282,7 @@ function App() {
                           isPast={true}
                           onNameClick={handleNameClick}
                           activeQuery={searchQuery}
+                          selectedMember={selectedMember}
                         />
                       </section>
                     )}
@@ -221,6 +300,7 @@ function App() {
                     schedule={currentSchedule}
                     onNameClick={handleNameClick}
                     activeQuery={searchQuery}
+                    selectedMember={selectedMember}
                   />
                 )}
 
@@ -241,6 +321,7 @@ function App() {
                       isPast={false}
                       onNameClick={handleNameClick}
                       activeQuery={searchQuery}
+                      selectedMember={selectedMember}
                     />
                   </section>
                 )}
@@ -269,6 +350,7 @@ function App() {
                           isPast={true}
                           onNameClick={handleNameClick}
                           activeQuery={searchQuery}
+                          selectedMember={selectedMember}
                         />
                       </section>
                     )}
@@ -279,6 +361,14 @@ function App() {
           </>
         )}
       </main>
+
+      <MemberSelector
+        isOpen={selectorOpen}
+        members={allMembers}
+        selectedMember={selectedMember}
+        onSelect={handleMemberSelect}
+        onClose={() => setSelectorOpen(false)}
+      />
 
       <footer style={{ marginTop: '4rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
         <p>© 2026 Heitor Macedo</p>

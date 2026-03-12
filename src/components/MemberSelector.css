@@ -1,0 +1,114 @@
+.member-selector-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 1200;
+}
+
+.member-selector-card {
+  background: rgba(13, 13, 13, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  max-width: 640px;
+  width: 100%;
+  padding: 2rem;
+  box-shadow: 0 30px 60px -35px rgba(0, 0, 0, 0.7);
+  position: relative;
+}
+
+.member-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.member-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.member-selector-header h3 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.member-close {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  transition: var(--transition);
+}
+
+.member-close:hover {
+  border-color: var(--accent-primary);
+  color: #fff;
+}
+
+.member-selector-subtitle {
+  margin: 0.2rem 0 1rem 0;
+  color: var(--text-secondary);
+}
+
+.member-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  padding-right: 0.2rem;
+}
+
+.member-pill {
+  padding: 0.65rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.member-pill:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  color: #fff;
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.member-pill--selected {
+  border-color: transparent;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  box-shadow: 0 20px 30px -12px rgba(139, 92, 246, 0.8);
+}
+
+.member-empty {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.member-selector-footer {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 0.9rem;
+}

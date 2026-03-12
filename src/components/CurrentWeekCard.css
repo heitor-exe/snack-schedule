@@ -1,194 +1,199 @@
 .current-week-wrapper {
-    margin-bottom: 3rem;
-    text-align: left;
+  margin-bottom: 3rem;
+  text-align: left;
 }
 
 .current-week-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    padding: 0.35rem 0.9rem;
-    border-radius: 999px;
-    margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
 }
 
 .badge-dot {
-    width: 8px;
-    height: 8px;
-    background: #fff;
-    border-radius: 50%;
-    animation: pulse-dot 1.5s ease-in-out infinite;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  animation: pulse-dot 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.5;
-        transform: scale(0.7);
-    }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.7);
+  }
 }
 
 .current-week-card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 2rem;
-    backdrop-filter: blur(16px);
-    position: relative;
-    /* gradient border via pseudo-element */
-    border: 1.5px solid transparent;
-    background-clip: padding-box;
-    box-shadow:
-        0 0 0 1.5px transparent,
-        0 20px 60px -10px rgba(139, 92, 246, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-    /* Gradient border trick */
-    background-image:
-        linear-gradient(var(--bg-color), var(--bg-color)),
-        linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    border: 2px solid transparent;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(16px);
+  position: relative;
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  box-shadow:
+    0 0 0 1.5px transparent,
+    0 20px 60px -10px rgba(139, 92, 246, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background-image:
+    linear-gradient(var(--bg-color), var(--bg-color)),
+    linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 2px solid transparent;
 }
 
 .current-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding-bottom: 1.25rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .current-card-date {
-    font-size: 2rem;
-    font-weight: 800;
-    margin: 0 0 0.25rem 0;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 0.25rem 0;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .current-card-weekday {
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .days-pill {
-    background: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    color: var(--accent-primary);
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 0.4rem 1rem;
-    border-radius: 999px;
-    white-space: nowrap;
-    align-self: flex-start;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: var(--accent-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.current-user-status {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+}
+
+.current-user-status .status-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(249, 115, 22, 0.12);
+  color: #f97316;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(249, 115, 22, 0.25);
+}
+
+.food-banner {
+  margin-bottom: 1.2rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(244, 63, 94, 0.2));
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 20px 40px -28px rgba(244, 63, 94, 0.8);
 }
 
 .current-card-body {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
 }
 
 .current-group h4 {
-    margin: 0 0 0.6rem 0;
-    font-size: 1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+  margin: 0 0 0.6rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .current-group .group-count {
-    font-weight: 400;
-    opacity: 0.6;
-    font-size: 0.9rem;
+  font-weight: 400;
+  opacity: 0.6;
+  font-size: 0.9rem;
 }
 
 .current-group ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .current-group li {
-    padding: 0.25rem 0;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
+  padding: 0.25rem 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 .current-group.food-group h4 {
-    color: var(--food-color);
+  color: var(--food-color);
 }
 
 .current-group.drink-group h4 {
-    color: var(--drink-color);
+  color: var(--drink-color);
 }
 
 .current-group.free-group h4 {
-    color: var(--free-color);
+  color: var(--free-color);
 }
 
 .inline-list-current {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .inline-list-current li {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.2rem 0.6rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
 }
-
-/* ── Name chip shared styles (A2) ── */
-.current-week-card .name-chip {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-family: var(--font-family);
-    font-size: 0.95rem;
-    padding: 0.15rem 0.35rem;
-    margin: 0;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: var(--transition);
-    text-align: left;
-    display: inline-block;
-}
-
-.current-week-card .name-chip:hover {
-    color: var(--accent-primary);
-    background: rgba(139, 92, 246, 0.12);
-}
-
-.current-week-card .name-chip--active {
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: #fff !important;
-    font-weight: 600;
-}
-
-.current-week-card .name-chip--inline {
-    font-size: 0.85rem;
-}
-/* ─────────────────────────────── */
