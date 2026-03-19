@@ -9,7 +9,13 @@ import './ScheduleList.css';
  *   onNameClick {Function}  passed down to ScheduleCard for A2
  *   activeQuery {string}    current search query for name highlighting
  */
-const ScheduleList = ({ schedules, isPast = false, onNameClick, activeQuery = '' }) => {
+const ScheduleList = ({
+  schedules,
+  isPast = false,
+  onNameClick,
+  activeQuery = '',
+  selectedMember = '',
+}) => {
   if (!schedules || schedules.length === 0) {
     return (
       <div className="loading">
@@ -23,15 +29,11 @@ const ScheduleList = ({ schedules, isPast = false, onNameClick, activeQuery = ''
       {schedules.map((schedule) => (
         <ScheduleCard
           key={schedule.date}
-          date={schedule.date}
+          schedule={schedule}
           isPast={isPast}
           onNameClick={onNameClick}
           activeQuery={activeQuery}
-          distribution={{
-            food: schedule.food_team || [],
-            drink: schedule.drink_team || [],
-            free: schedule.free_team || [],
-          }}
+          selectedMember={selectedMember}
         />
       ))}
     </div>
