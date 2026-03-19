@@ -5,10 +5,12 @@ import ScheduleList from './components/ScheduleList';
 import CurrentWeekCard from './components/CurrentWeekCard';
 import ScheduleFilter from './components/ScheduleFilter';
 import MemberSelector from './components/MemberSelector';
+import AdminConfigModal from './components/AdminConfigModal';
 import { getDozenFridays } from './utils/dateUtils';
 import { generateBalancedSchedule } from './utils/scheduler';
 import { filterByName } from './utils/filterUtils';
 import { supabase } from './services/supabaseClient';
+import { MEMBERS } from './utils/constants';
 import {
   MEMBER_STORAGE_KEY,
   getUniqueMembers,
@@ -18,6 +20,41 @@ import {
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
+const SEASON_CONFIG_STORAGE_KEY = 'season_config_v1';
+const DEFAULT_SEASON_CONFIG = {
+  startDate: '2026-02-27',
+  endDate: '2026-07-03',
+  members: MEMBERS,
+  membersText: MEMBERS.join('\n'),
+};
+
+const getInitialSeasonConfig = () => {
+  if (typeof window === 'undefined') return DEFAULT_SEASON_CONFIG;
+  const raw = window.localStorage.getItem(SEASON_CONFIG_STORAGE_KEY);
+  if (!raw) return DEFAULT_SEASON_CONFIG;
+
+  try {
+    const parsed = JSON.parse(raw);
+    const members = Array.isArray(parsed.members)
+      ? parsed.members.map((name) => String(name).trim()).filter(Boolean)
+      : MEMBERS;
+
+    if (!parsed.startDate || !parsed.endDate || members.length === 0) {
+      return DEFAULT_SEASON_CONFIG;
+    }
+
+    return {
+      startDate: parsed.startDate,
+      endDate: parsed.endDate,
+      members,
+      membersText: members.join('\n'),
+    };
+  } catch (error) {
+    console.warn('Configuração da temporada inválida no localStorage:', error);
+    return DEFAULT_SEASON_CONFIG;
+  }
+};
 
 /** Retorna a escala da semana vigente (próxima sexta, ou a última se já passaram todas). */
 const findCurrentSchedule = (schedules) => {
@@ -46,6 +83,9 @@ function App() {
   });
   const [selectorOpen, setSelectorOpen] = useState(false);
   const [hasAutoPrompted, setHasAutoPrompted] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [seasonConfig, setSeasonConfig] = useState(() => getInitialSeasonConfig());
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   // ── Fetch / generate schedules ────────────────────────────────
   useEffect(() => {
@@ -61,11 +101,11 @@ function App() {
         setSchedules(data);
       } else {
         console.log('Gerando nova escala balanceada...');
-        const fridays = getDozenFridays('2026-02-27', '2026-07-03');
-        const generated = generateBalancedSchedule(fridays);
+        const fridays = getDozenFridays(seasonConfig.startDate, seasonConfig.endDate);
+        const generated = generateBalancedSchedule(fridays, seasonConfig.members);
         setSchedules(generated);
 
-        if (supabaseUrl && supabaseAnonKey) {
+        if (supabaseUrl && supabaseAnonKey && generated.length > 0) {
           const { error } = await supabase.from('schedules').insert(generated);
           if (error) console.error('Erro ao salvar escala:', error);
           else console.log('Escala salva no banco com sucesso!');
@@ -76,7 +116,7 @@ function App() {
     };
 
     fetchSchedules();
-  }, []);
+  }, [seasonConfig.endDate, seasonConfig.members, seasonConfig.startDate]);
 
   // ── Derived state ─────────────────────────────────────────────
   const today = new Date();
@@ -115,7 +155,10 @@ function App() {
         })
       : upcomingSchedules;
 
-  const allMembers = useMemo(() => getUniqueMembers(schedules), [schedules]);
+  const allMembers = useMemo(() => {
+    const scheduleMembers = getUniqueMembers(schedules);
+    return scheduleMembers.length > 0 ? scheduleMembers : seasonConfig.members;
+  }, [schedules, seasonConfig.members]);
   const userRoleThisWeek =
     selectedMember && currentSchedule
       ? getRoleForSchedule(currentSchedule, selectedMember)
@@ -130,6 +173,18 @@ function App() {
       window.localStorage.removeItem(MEMBER_STORAGE_KEY);
     }
   }, [selectedMember]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(
+      SEASON_CONFIG_STORAGE_KEY,
+      JSON.stringify({
+        startDate: seasonConfig.startDate,
+        endDate: seasonConfig.endDate,
+        members: seasonConfig.members,
+      })
+    );
+  }, [seasonConfig]);
 
   useEffect(() => {
     if (!selectedMember && allMembers.length > 0 && !hasAutoPrompted) {
@@ -189,6 +244,45 @@ function App() {
     setSelectorOpen(true);
   }, [setSearchQuery]);
 
+  const handleApplyAdminConfig = useCallback(
+    async (nextConfig) => {
+      setIsRegenerating(true);
+
+      try {
+        const fridays = getDozenFridays(nextConfig.startDate, nextConfig.endDate);
+        const generated = generateBalancedSchedule(fridays, nextConfig.members);
+
+        if (supabaseUrl && supabaseAnonKey) {
+          const { error: deleteError } = await supabase.from('schedules').delete().neq('date', '');
+          if (deleteError) throw deleteError;
+
+          if (generated.length > 0) {
+            const { error: insertError } = await supabase.from('schedules').insert(generated);
+            if (insertError) throw insertError;
+          }
+        }
+
+        setSeasonConfig(nextConfig);
+        setSchedules(generated);
+        setFilteredSchedules(null);
+        setSearchQuery('');
+        setShowPast(false);
+
+        if (selectedMember && !nextConfig.members.includes(selectedMember)) {
+          setSelectedMember('');
+        }
+
+        setAdminOpen(false);
+      } catch (error) {
+        console.error('Erro ao regenerar escala:', error);
+        window.alert('Não foi possível regenerar a escala. Confira o console e tente novamente.');
+      } finally {
+        setIsRegenerating(false);
+      }
+    },
+    [selectedMember]
+  );
+
   // ── Render ────────────────────────────────────────────────────
   return (
     <div className="container">
@@ -213,6 +307,9 @@ function App() {
           <div className="identity-actions">
             <button className="identity-btn" type="button" onClick={() => setSelectorOpen(true)}>
               {selectedMember ? 'Trocar pessoa' : 'Identificar meu nome'}
+            </button>
+            <button className="identity-btn identity-btn--outline" type="button" onClick={() => setAdminOpen(true)}>
+              Configurar temporada
             </button>
             {selectedMember && (
               <button className="identity-link" type="button" onClick={handleClearSelection}>
@@ -369,6 +466,16 @@ function App() {
         onSelect={handleMemberSelect}
         onClose={() => setSelectorOpen(false)}
       />
+      {adminOpen && (
+        <AdminConfigModal
+          isOpen={adminOpen}
+          currentConfig={seasonConfig}
+          onClose={() => setAdminOpen(false)}
+          onApply={handleApplyAdminConfig}
+          adminPassword={adminPassword}
+          isSaving={isRegenerating}
+        />
+      )}
 
       <footer style={{ marginTop: '4rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
         <p>© 2026 Heitor Macedo</p>

@@ -18,11 +18,11 @@ import { MEMBERS } from './constants';
  *       4. Remaining 6 → food
  *
  * @param {Date[]} dates - array of Friday Date objects (local time)
+ * @param {string[]} [members=MEMBERS] - membros participantes da temporada
  * @returns {Array<{date, food_team, drink_team, free_team}>}
  */
-export const generateBalancedSchedule = (dates) => {
-    const people = [...MEMBERS];
-    const n = people.length; // 15
+export const generateBalancedSchedule = (dates, members = MEMBERS) => {
+    const people = [...members];
 
     // Per-person running counters
     const totalFood = Object.fromEntries(people.map(p => [p, 0]));
