@@ -46,7 +46,7 @@ function App() {
     displayedUpcoming,
     handleSearchChange,
     handleFilterChange,
-  } = useSearchResults(schedules);
+  } = useSearchResults(upcomingSchedules);
 
   const allMembers = useMemo(() => {
     const scheduleMembers = getUniqueMembers(schedules);

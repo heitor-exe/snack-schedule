@@ -36,7 +36,7 @@ export default function NormalModeView({
         />
       )}
 
-      {displayedUpcoming && displayedUpcoming.length > 0 && (
+      {displayedUpcoming.length > 0 && (
         <section className="schedule-section">
           <h2 className="section-title upcoming">📅 Próximas escalas</h2>
           <ScheduleList
