@@ -19,7 +19,7 @@ const parseDate = (dateStr) => new Date(dateStr + 'T00:00:00');
 
 export function useCurrentSchedule(schedules) {
   const today = useMemo(() => getToday(), []);
-  
+
   const currentSchedule = useMemo(
     () => findCurrentSchedule(schedules),
     [schedules]
@@ -27,7 +27,8 @@ export function useCurrentSchedule(schedules) {
 
   const pastSchedules = useMemo(
     () => schedules.filter((s) => {
-      if (s === currentSchedule) return false;
+      const isCurrent = currentSchedule && s.date === currentSchedule.date;
+      if (isCurrent) return false;
       return parseDate(s.date) < today;
     }),
     [schedules, currentSchedule, today]
@@ -35,7 +36,8 @@ export function useCurrentSchedule(schedules) {
 
   const upcomingSchedules = useMemo(
     () => schedules.filter((s) => {
-      if (s === currentSchedule) return false;
+      const isCurrent = currentSchedule && s.date === currentSchedule.date;
+      if (isCurrent) return false;
       return parseDate(s.date) >= today;
     }),
     [schedules, currentSchedule, today]

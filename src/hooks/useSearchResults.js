@@ -1,7 +1,7 @@
 import { useMemo, useState, useCallback } from 'react';
 import { filterByName } from '../utils/filterUtils';
 
-export function useSearchResults(schedules) {
+export function useSearchResults(schedules, currentSchedule = null) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredSchedules, setFilteredSchedules] = useState(null);
 
@@ -21,8 +21,15 @@ export function useSearchResults(schedules) {
   }, []);
 
   const searchUpcoming = useMemo(
-    () => (searchResults ? searchResults.filter((s) => parseDate(s.date) >= today) : []),
-    [searchResults, today]
+    () => {
+      if (!searchResults) return [];
+      return searchResults.filter((s) => {
+        const matchesDate = parseDate(s.date) >= today;
+        const isCurrent = currentSchedule && s.date === currentSchedule.date;
+        return matchesDate && !isCurrent;
+      });
+    },
+    [searchResults, today, currentSchedule]
   );
 
   const searchPast = useMemo(
@@ -32,12 +39,14 @@ export function useSearchResults(schedules) {
 
   const displayedUpcoming = useMemo(
     () => {
-      if (filteredSchedules !== null) {
-        return filteredSchedules.filter((s) => parseDate(s.date) >= today);
-      }
-      return schedules.filter((s) => parseDate(s.date) >= today);
+      const source = filteredSchedules !== null ? filteredSchedules : schedules;
+      return source.filter((s) => {
+        const matchesDate = parseDate(s.date) >= today;
+        const isCurrent = currentSchedule && s.date === currentSchedule.date;
+        return matchesDate && !isCurrent;
+      });
     },
-    [filteredSchedules, schedules, today]
+    [filteredSchedules, schedules, today, currentSchedule]
   );
 
   const handleSearchChange = useCallback((val) => {

@@ -46,7 +46,7 @@ function App() {
     displayedUpcoming,
     handleSearchChange,
     handleFilterChange,
-  } = useSearchResults(upcomingSchedules);
+  } = useSearchResults(schedules, currentSchedule);
 
   const allMembers = useMemo(() => {
     const scheduleMembers = getUniqueMembers(schedules);
@@ -99,14 +99,12 @@ function App() {
   const handleMemberSelect = useCallback((name) => {
     setSelectedMember(name);
     setSelectorOpen(false);
-    handleSearchChange(name);
-  }, [handleSearchChange]);
+  }, []);
 
   const handleClearSelection = useCallback(() => {
     setSelectedMember('');
-    handleSearchChange('');
     setSelectorOpen(true);
-  }, [handleSearchChange]);
+  }, []);
 
   const handleApplyAdminConfig = useCallback(
     async (nextConfig) => {
@@ -163,6 +161,7 @@ function App() {
                 onNameClick={handleNameClick}
                 activeQuery={searchQuery}
                 selectedMember={selectedMember}
+                currentSchedule={currentSchedule}
               />
             ) : (
               <NormalModeView
