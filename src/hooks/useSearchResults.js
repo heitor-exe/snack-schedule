@@ -35,9 +35,9 @@ export function useSearchResults(schedules) {
       if (filteredSchedules !== null) {
         return filteredSchedules.filter((s) => parseDate(s.date) >= today);
       }
-      return null;
+      return schedules.filter((s) => parseDate(s.date) >= today);
     },
-    [filteredSchedules, today]
+    [filteredSchedules, schedules, today]
   );
 
   const handleSearchChange = useCallback((val) => {
