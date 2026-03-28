@@ -74,12 +74,6 @@ const CurrentWeekCard = ({
           </div>
         )}
 
-        {userRole === 'food' && (
-          <div className="food-banner">
-            <p>Você está de comida esta semana 🍔</p>
-          </div>
-        )}
-
         <div className="current-card-body">
           <div className="current-group food-group">
             <h4>🍽️ Comida <span className="group-count">({food_team.length})</span></h4>

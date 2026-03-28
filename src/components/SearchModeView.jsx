@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import CurrentWeekCard from './CurrentWeekCard';
 import ScheduleList from './ScheduleList';
 import PastToggle from './PastToggle';
 
@@ -11,6 +12,7 @@ export default function SearchModeView({
   onNameClick,
   activeQuery,
   selectedMember,
+  currentSchedule,
 }) {
   const pastSectionRef = useRef(null);
 
@@ -22,8 +24,20 @@ export default function SearchModeView({
     );
   }
 
+  const isCurrentInResults = currentSchedule && searchResults.some(
+    (s) => s.date === currentSchedule.date
+  );
   return (
     <>
+      {currentSchedule && isCurrentInResults && (
+        <CurrentWeekCard
+          schedule={currentSchedule}
+          onNameClick={onNameClick}
+          activeQuery={activeQuery}
+          selectedMember={selectedMember}
+        />
+      )}
+
       {searchUpcoming.length > 0 && (
         <section className="schedule-section">
           <h2 className="section-title upcoming">📅 Próximas escalas</h2>
