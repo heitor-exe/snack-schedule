@@ -122,7 +122,10 @@ function App() {
         setAdminOpen(false);
       } catch (error) {
         console.error('Erro ao regenerar escala:', error);
-        window.alert('Não foi possível regenerar a escala. Configure o console e tente novamente.');
+        window.alert(
+          error?.message ??
+            'Não foi possível regenerar a escala. Confira as policies do Supabase e tente novamente.'
+        );
       } finally {
         setIsRegenerating(false);
       }
