@@ -5,6 +5,33 @@ import { generateBalancedSchedule } from '../utils/scheduler';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const DELETE_ALL_SENTINEL_ID = '00000000-0000-0000-0000-000000000000';
+
+function buildSchedulePersistenceError(operation, error) {
+  const friendlyOperation = operation === 'delete' ? 'remover a escala atual' : 'salvar a nova escala';
+
+  if (!error) {
+    return new Error(`Não foi possível ${friendlyOperation}.`);
+  }
+
+  if (error.code === '42501') {
+    return new Error(
+      `Sem permissão para ${friendlyOperation}. Verifique a policy de ${operation.toUpperCase()} no Supabase.`
+    );
+  }
+
+  if (error.code === '23505') {
+    return new Error(
+      'Já existe uma escala salva para uma ou mais datas. A escala antiga provavelmente não foi removida antes da nova gravação.'
+    );
+  }
+
+  if (error.message) {
+    return new Error(`Não foi possível ${friendlyOperation}: ${error.message}`);
+  }
+
+  return new Error(`Não foi possível ${friendlyOperation}.`);
+}
 
 async function fetchAndGenerateSchedules(seasonConfig, setSchedules, setLoading) {
   setLoading(true);
@@ -52,11 +79,20 @@ export function useSchedules(seasonConfig) {
     const generated = generateBalancedSchedule(fridays, newConfig.members);
 
     if (supabaseUrl && supabaseAnonKey) {
-      await supabase.from('schedules').delete().neq('date', '');
+      const { error: deleteError } = await supabase
+        .from('schedules')
+        .delete()
+        .neq('id', DELETE_ALL_SENTINEL_ID);
+
+      if (deleteError) {
+        throw buildSchedulePersistenceError('delete', deleteError);
+      }
       
       if (generated.length > 0) {
-        const { error } = await supabase.from('schedules').insert(generated);
-        if (error) throw error;
+        const { error: insertError } = await supabase.from('schedules').insert(generated);
+        if (insertError) {
+          throw buildSchedulePersistenceError('insert', insertError);
+        }
       }
     }
 
