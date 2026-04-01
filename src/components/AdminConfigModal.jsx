@@ -66,60 +66,60 @@ const AdminConfigModal = ({
   };
 
   return (
-    <div className="member-selector-backdrop" role="presentation" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/85 backdrop-blur-[14px] flex items-center justify-center p-8 z-[1200]" role="presentation" onClick={onClose}>
       <div
-        className="member-selector-card admin-config-modal"
+        className="bg-bg/95 border border-white/8 rounded-3xl max-w-[640px] w-full p-8 relative shadow-[0_30px_60px_-35px_rgba(0,0,0,0.7)]"
         role="dialog"
         aria-modal="true"
         aria-label="Configuração administrativa"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="member-selector-header">
+        <header className="flex justify-between items-center mb-3">
           <div>
-            <p className="member-eyebrow">Admin da temporada</p>
-            <h3>Configurar período e membros</h3>
+            <p className="uppercase tracking-[0.35em] text-[0.7rem] text-text-secondary m-0">Admin da temporada</p>
+            <h3 className="m-0 text-2xl mt-0">Configurar período e membros</h3>
           </div>
-          <button className="member-close" onClick={onClose} type="button">
+          <button className="bg-transparent border border-white/40 rounded-full text-text-secondary font-semibold px-4 py-1.5 transition-all duration-300 ease-in-out hover:border-accent-primary hover:text-white" onClick={onClose} type="button">
             Fechar
           </button>
         </header>
 
         {!isUnlocked ? (
-          <form onSubmit={handleUnlock} className="admin-config-form">
-            <p className="member-selector-subtitle">
+          <form onSubmit={handleUnlock} className="flex flex-col gap-3.5">
+            <p className="text-text-secondary my-1 mb-0 mt-0">
               Entre com a senha de administrador para editar a temporada.
             </p>
-            <label className="admin-config-label" htmlFor="admin-password">
+            <label className="block text-[0.85rem] text-text-secondary mb-1.5" htmlFor="admin-password">
               Senha
             </label>
             <input
               id="admin-password"
-              className="admin-config-input"
+              className="w-full bg-white/4 border border-white/14 rounded-xl text-text-primary py-2.5 px-3 text-[0.95rem] font-body focus:outline-2 focus:outline-accent-primary/50 focus:outline-offset-1"
               type="password"
               value={passwordInput}
               onChange={(event) => setPasswordInput(event.target.value)}
               placeholder="Digite a senha"
               autoComplete="off"
             />
-            {error && <p className="admin-config-error">{error}</p>}
-            <button className="identity-btn admin-config-submit" type="submit">
+            {error && <p className="m-0 text-[#fca5a5] text-[0.9rem]">{error}</p>}
+            <button className="self-start py-2.5 px-4 rounded-full border-none cursor-pointer font-semibold bg-gradient-to-br from-accent-primary to-accent-secondary text-white shadow-[0_15px_40px_-20px_rgba(139,92,246,0.8)] transition-all duration-300 ease-in-out hover:-translate-y-px hover:shadow-[0_18px_45px_-20px_rgba(236,72,153,0.8)]" type="submit">
               Entrar
             </button>
           </form>
         ) : (
-          <form onSubmit={handleSubmitConfig} className="admin-config-form">
-            <p className="member-selector-subtitle">
+          <form onSubmit={handleSubmitConfig} className="flex flex-col gap-3.5">
+            <p className="text-text-secondary my-1 mb-0 mt-0">
               Atualize os dados e gere uma nova escala substituindo a temporada atual.
             </p>
 
-            <div className="admin-config-grid">
+            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-1">
               <div>
-                <label className="admin-config-label" htmlFor="season-start">
+                <label className="block text-[0.85rem] text-text-secondary mb-1.5" htmlFor="season-start">
                   Início da temporada
                 </label>
                 <input
                   id="season-start"
-                  className="admin-config-input"
+                  className="w-full bg-white/4 border border-white/14 rounded-xl text-text-primary py-2.5 px-3 text-[0.95rem] font-body focus:outline-2 focus:outline-accent-primary/50 focus:outline-offset-1"
                   type="date"
                   value={localConfig.startDate}
                   onChange={(event) =>
@@ -128,12 +128,12 @@ const AdminConfigModal = ({
                 />
               </div>
               <div>
-                <label className="admin-config-label" htmlFor="season-end">
+                <label className="block text-[0.85rem] text-text-secondary mb-1.5" htmlFor="season-end">
                   Fim da temporada
                 </label>
                 <input
                   id="season-end"
-                  className="admin-config-input"
+                  className="w-full bg-white/4 border border-white/14 rounded-xl text-text-primary py-2.5 px-3 text-[0.95rem] font-body focus:outline-2 focus:outline-accent-primary/50 focus:outline-offset-1"
                   type="date"
                   value={localConfig.endDate}
                   onChange={(event) =>
@@ -143,12 +143,12 @@ const AdminConfigModal = ({
               </div>
             </div>
 
-            <label className="admin-config-label" htmlFor="members-list">
+            <label className="block text-[0.85rem] text-text-secondary mb-1.5" htmlFor="members-list">
               Membros (1 por linha)
             </label>
             <textarea
               id="members-list"
-              className="admin-config-textarea"
+              className="w-full bg-white/4 border border-white/14 rounded-xl text-text-primary py-2.5 px-3 text-[0.95rem] font-body resize-y min-h-[220px] focus:outline-2 focus:outline-accent-primary/50 focus:outline-offset-1"
               rows={10}
               value={localConfig.membersText}
               onChange={(event) =>
@@ -156,10 +156,10 @@ const AdminConfigModal = ({
               }
             />
 
-            <p className="admin-config-count">{memberCount} membro(s) válido(s)</p>
-            {error && <p className="admin-config-error">{error}</p>}
+            <p className="m-0 text-text-secondary text-[0.85rem]">{memberCount} membro(s) válido(s)</p>
+            {error && <p className="m-0 text-[#fca5a5] text-[0.9rem]">{error}</p>}
 
-            <button className="identity-btn admin-config-submit" type="submit" disabled={isSaving}>
+            <button className="self-start py-2.5 px-4 rounded-full border-none cursor-pointer font-semibold bg-gradient-to-br from-accent-primary to-accent-secondary text-white shadow-[0_15px_40px_-20px_rgba(139,92,246,0.8)] transition-all duration-300 ease-in-out hover:-translate-y-px hover:shadow-[0_18px_45px_-20px_rgba(236,72,153,0.8)] disabled:opacity-75 disabled:cursor-wait" type="submit" disabled={isSaving}>
               {isSaving ? 'Gerando nova escala...' : 'Salvar e regenerar escala'}
             </button>
           </form>

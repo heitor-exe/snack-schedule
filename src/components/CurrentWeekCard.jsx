@@ -2,7 +2,6 @@ import React from 'react';
 import { formatDatePT } from '../utils/dateUtils';
 import NameChip from './NameChip';
 import { getRoleForSchedule, getRoleLabel } from '../utils/userUtils';
-import './CurrentWeekCard.css';
 
 const getDaysUntilFriday = (dateStr) => {
   const today = new Date();
@@ -48,46 +47,58 @@ const CurrentWeekCard = ({
     ));
 
   return (
-    <div className="current-week-wrapper">
-      <div className="current-week-badge">
-        <span className="badge-dot" />
+    <div className="mb-12 text-left">
+      <div className="inline-flex items-center gap-2 bg-gradient-to-br from-accent-primary to-accent-secondary text-white text-[0.75rem] font-bold uppercase tracking-[1.5px] px-3.5 py-1.5 rounded-full mb-4">
+        <span className="w-2 h-2 bg-white rounded-full animate-pulse-dot" />
         Escala Vigente
       </div>
 
-      <div className="current-week-card">
-        <div className="current-card-header">
+      <div className="gradient-border">
+        <div className="flex justify-between items-start border-b border-white/8 pb-5 mb-6 flex-wrap gap-4">
           <div>
-            <h2 className="current-card-date">{formatDatePT(new Date(date + 'T00:00:00'))}</h2>
-            <span className="current-card-weekday">Sexta-feira</span>
+            <h2 className="text-3xl font-extrabold m-0 mb-1 bg-gradient-to-br from-accent-primary to-accent-secondary bg-clip-text text-transparent">
+              {formatDatePT(new Date(date + 'T00:00:00'))}
+            </h2>
+            <span className="text-text-secondary text-[0.85rem] uppercase tracking-[1px]">Sexta-feira</span>
           </div>
-          <div className="days-pill">{daysLabel}</div>
+          <div className="bg-accent-primary/15 border border-accent-primary/30 text-accent-primary text-[0.85rem] font-semibold px-4 py-1.5 rounded-full whitespace-nowrap self-start">
+            {daysLabel}
+          </div>
         </div>
 
         {selectedMember && (
-          <div className="current-user-status">
-            <span className="status-label">
+          <div className="mb-4 flex flex-wrap items-center gap-2.5 bg-white/4 border border-white/8 rounded-lg px-4 py-2.5">
+            <span className="text-text-secondary text-[0.9rem]">
               Identificado como <strong>{selectedMember}</strong>
             </span>
-            <span className="status-badge">
+            <span className="text-[0.75rem] font-bold tracking-[0.08em] uppercase px-3.5 py-1.5 rounded-full bg-user-accent/12 text-user-accent border border-user-accent/30 shadow-[inset_0_0_0_1px_rgba(249,115,22,0.25)]">
               {userRoleLabel ? `É ${userRoleLabel.toLowerCase()}` : 'Sem escala nesta semana'}
             </span>
           </div>
         )}
 
-        <div className="current-card-body">
-          <div className="current-group food-group">
-            <h4>🍽️ Comida <span className="group-count">({food_team.length})</span></h4>
-            <ul>{renderNames(food_team)}</ul>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-6">
+          <div className="current-group">
+            <h4 className="text-food m-0 mb-2.5 text-base font-semibold flex items-center gap-1">
+              🍽️ Comida <span className="font-normal opacity-60 text-[0.9rem]">({food_team.length})</span>
+            </h4>
+            <ul className="list-none p-0 m-0">{renderNames(food_team)}</ul>
           </div>
 
-          <div className="current-group drink-group">
-            <h4>🥤 Bebida <span className="group-count">({drink_team.length})</span></h4>
-            <ul>{renderNames(drink_team)}</ul>
+          <div className="current-group">
+            <h4 className="text-drink m-0 mb-2.5 text-base font-semibold flex items-center gap-1">
+              🥤 Bebida <span className="font-normal opacity-60 text-[0.9rem]">({drink_team.length})</span>
+            </h4>
+            <ul className="list-none p-0 m-0">{renderNames(drink_team)}</ul>
           </div>
 
-          <div className="current-group free-group">
-            <h4>✨ Folga <span className="group-count">({free_team.length})</span></h4>
-            <ul className="inline-list-current">{renderNames(free_team, true)}</ul>
+          <div className="current-group">
+            <h4 className="text-free m-0 mb-2.5 text-base font-semibold flex items-center gap-1">
+              ✨ Folga <span className="font-normal opacity-60 text-[0.9rem]">({free_team.length})</span>
+            </h4>
+            <ul className="flex flex-wrap gap-1.5 list-none p-0 m-0">
+              {renderNames(free_team, true)}
+            </ul>
           </div>
         </div>
       </div>
