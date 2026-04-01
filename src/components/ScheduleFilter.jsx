@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useTransition } from 'react';
 import { formatDatePT } from '../utils/dateUtils';
-import './ScheduleFilter.css';
 
 /**
  * ScheduleFilter — filtro por data (mês ou semana específica).
@@ -88,19 +87,29 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
   const hasFilter = selectedWeek || selectedMonth;
 
   return (
-    <div className="schedule-filter">
-      <div className="filter-header">
-        <span className="filter-label">📅 Filtrar por data</span>
-        <div className="filter-tabs">
+    <div className="bg-card border border-white/8 rounded-xl px-6 py-5 backdrop-blur-xl mb-10 text-left">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <span className="text-text-secondary text-[0.9rem] font-semibold tracking-[0.5px]">📅 Filtrar por data</span>
+        <div className="flex bg-white/4 border border-white/8 rounded-md p-[3px] gap-[2px]">
           <button
-            className={`filter-tab ${mode === 'month' ? 'active' : ''}`}
+            className={`
+              bg-transparent border-none text-text-secondary text-[0.82rem] font-semibold
+              px-3.5 py-1.5 rounded-md transition-all duration-300 ease-in-out font-body cursor-pointer
+              hover:text-text-primary hover:bg-white/6
+              ${mode === 'month' ? 'bg-gradient-to-br from-accent-primary to-accent-secondary text-white' : ''}
+            `}
             onClick={() => handleModeChange('month')}
             type="button"
           >
             Por Mês
           </button>
           <button
-            className={`filter-tab ${mode === 'week' ? 'active' : ''}`}
+            className={`
+              bg-transparent border-none text-text-secondary text-[0.82rem] font-semibold
+              px-3.5 py-1.5 rounded-md transition-all duration-300 ease-in-out font-body cursor-pointer
+              hover:text-text-primary hover:bg-white/6
+              ${mode === 'week' ? 'bg-gradient-to-br from-accent-primary to-accent-secondary text-white' : ''}
+            `}
             onClick={() => handleModeChange('week')}
             type="button"
           >
@@ -109,10 +118,10 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
         </div>
       </div>
 
-      <div className="filter-controls">
+      <div className="flex items-center gap-3 flex-wrap">
         {mode === 'month' ? (
           <select
-            className="filter-select"
+            className="flex-1 min-w-[200px] bg-white/5 border border-white/12 rounded-md text-text-primary font-body text-[0.9rem] py-2.5 px-4 custom-select cursor-pointer transition-all duration-300 ease-in-out focus:outline-none focus:border-accent-primary focus:shadow-[0_0_0_3px_rgba(139,92,246,0.15)] hover:border-white/25"
             value={selectedMonth}
             onChange={handleMonthChange}
             aria-label="Selecionar mês"
@@ -124,7 +133,7 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
           </select>
         ) : (
           <select
-            className="filter-select"
+            className="flex-1 min-w-[200px] bg-white/5 border border-white/12 rounded-md text-text-primary font-body text-[0.9rem] py-2.5 px-4 custom-select cursor-pointer transition-all duration-300 ease-in-out focus:outline-none focus:border-accent-primary focus:shadow-[0_0_0_3px_rgba(139,92,246,0.15)] hover:border-white/25"
             value={selectedWeek}
             onChange={handleWeekChange}
             aria-label="Selecionar semana"
@@ -137,7 +146,7 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
         )}
 
         {hasFilter && (
-          <button className="filter-clear-btn" onClick={handleClear} type="button">
+          <button className="bg-accent-secondary/12 border border-accent-secondary/30 text-accent-secondary font-body text-[0.82rem] font-semibold py-2.5 px-4 rounded-md transition-all duration-300 ease-in-out whitespace-nowrap hover:bg-accent-secondary/22 hover:border-accent-secondary" onClick={handleClear} type="button">
             ✕ Limpar
           </button>
         )}

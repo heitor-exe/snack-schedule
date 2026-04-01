@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import './App.css';
 import SearchBar from './components/SearchBar';
 import MemberSelector from './components/MemberSelector';
 import AdminConfigModal from './components/AdminConfigModal';
@@ -134,7 +133,7 @@ function App() {
   );
 
   return (
-    <div className="container">
+    <div className="max-w-[1200px] mx-auto px-8 py-8 text-left">
       <AppHeader
         selectedMember={selectedMember}
         identityRoleLabel={identityRoleLabel}
