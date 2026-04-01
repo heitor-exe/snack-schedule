@@ -1,13 +1,6 @@
 import React from 'react';
 import ScheduleCard from './ScheduleCard';
 
-/**
- * Props:
- *   schedules   {Object[]}
- *   isPast      {boolean}
- *   onNameClick {Function}  passed down to ScheduleCard for A2
- *   activeQuery {string}    current search query for name highlighting
- */
 const ScheduleList = ({
   schedules,
   isPast = false,
@@ -17,14 +10,14 @@ const ScheduleList = ({
 }) => {
   if (!schedules || schedules.length === 0) {
     return (
-      <div className="text-center text-2xl text-text-secondary py-16">
+      <div className="text-center text-lg text-text-muted uppercase tracking-widest font-bold py-16">
         Nenhuma escala encontrada para o período selecionado.
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8 py-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 py-4">
       {schedules.map((schedule) => (
         <ScheduleCard
           key={schedule.date}

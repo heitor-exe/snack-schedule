@@ -17,12 +17,12 @@ const NameChip = ({
     <li key={name}>
       <button
         className={`
-          bg-transparent border-none text-text-secondary font-body text-[0.95rem] px-[0.35rem] py-[0.15rem]
-          cursor-pointer rounded-md transition-all duration-300 ease-in-out text-left inline-block
-          hover:text-accent-primary hover:bg-accent-primary/12 hover:shadow-[0_0_0_1px_rgba(139,92,246,0.25)]
-          ${isSearchMatch ? 'bg-gradient-to-br from-accent-primary to-accent-secondary text-white font-semibold shadow-[0_12px_30px_-15px_rgba(139,92,246,0.8)]' : ''}
-          ${isInline ? 'text-[0.85rem] px-[0.45rem] py-[0.2rem]' : ''}
-          ${isSelectedUser ? 'font-bold text-white bg-gradient-to-r from-user-accent to-user-accent-strong shadow-[0_12px_25px_-14px_rgba(249,115,22,0.7)]' : ''}
+          bg-transparent border-none text-text-muted font-body text-xs uppercase tracking-wider
+          cursor-pointer rounded-sm transition-all duration-300 text-left inline-block font-bold
+          hover:text-primary hover:bg-primary/10
+          ${isSearchMatch ? 'bg-primary/20 text-primary border border-primary/30 font-black rounded-sm' : ''}
+          ${isInline ? 'text-[10px] px-1.5 py-0.5' : 'px-1 py-0.5'}
+          ${isSelectedUser ? 'font-black text-white bg-gradient-to-r from-user-accent to-user-accent-strong rounded-sm' : ''}
         `}
         onClick={() => onNameClick(name)}
         title={`Ver todas as escalas de ${name}`}

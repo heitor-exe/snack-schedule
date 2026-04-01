@@ -1,26 +1,17 @@
 import React, { useState, useMemo, useTransition } from 'react';
 import { formatDatePT } from '../utils/dateUtils';
 
-/**
- * ScheduleFilter — filtro por data (mês ou semana específica).
- * A busca por nome foi extraída para o componente SearchBar.
- *
- * Props:
- *   schedules      {Object[]}  escalas próximas (alimenta os selects)
- *   onFilterChange {Function}  callback com lista filtrada (null = sem filtro)
- */
 const ScheduleFilter = ({ schedules, onFilterChange }) => {
-  const [mode, setMode] = useState('month'); // 'week' | 'month'
+  const [mode, setMode] = useState('month');
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const [, startTransition] = useTransition();
 
-  // --- Opções derivadas das escalas disponíveis ---
   const weekOptions = useMemo(
     () =>
       schedules.map((s) => ({
         value: s.date,
-        label: formatDatePT(new Date(s.date + 'T00:00:00')),
+        label: formatDatePT(new Date(s.date + 'T00:00:00')).toUpperCase(),
       })),
     [schedules],
   );
@@ -43,7 +34,6 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
     return opts;
   }, [schedules]);
 
-  // --- Aplicar filtro de data ---
   const applyFilter = (newMode, week, month) => {
     startTransition(() => {
       if (newMode === 'week') {
@@ -87,33 +77,29 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
   const hasFilter = selectedWeek || selectedMonth;
 
   return (
-    <div className="bg-card border border-white/8 rounded-xl px-6 py-5 backdrop-blur-xl mb-10 text-left">
-      <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
-        <span className="text-text-secondary text-[0.9rem] font-semibold tracking-[0.5px]">📅 Filtrar por data</span>
-        <div className="flex bg-white/4 border border-white/8 rounded-md p-[3px] gap-[2px]">
+    <div className="bg-card-dark border border-border-muted rounded-sm px-6 py-5 mb-10">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 border-b border-border-muted pb-4">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-black flex items-center gap-3 text-text-main uppercase tracking-tighter">
+            <span className="material-symbols-outlined text-primary">calendar_month</span>
+            Próximas Datas
+          </h2>
+          <p className="text-xs text-text-muted uppercase tracking-[0.2em] font-medium">Cronograma de Operações Mensais</p>
+        </div>
+        <div className="flex items-center bg-card-dark border border-border-muted p-1">
           <button
-            className={`
-              bg-transparent border-none text-text-secondary text-[0.82rem] font-semibold
-              px-3.5 py-1.5 rounded-md transition-all duration-300 ease-in-out font-body cursor-pointer
-              hover:text-text-primary hover:bg-white/6
-              ${mode === 'month' ? 'bg-gradient-to-br from-accent-primary to-accent-secondary text-white' : ''}
-            `}
+            className={`px-4 py-1.5 font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'month' ? 'bg-primary text-background-dark' : 'text-text-muted hover:text-white'}`}
             onClick={() => handleModeChange('month')}
             type="button"
           >
-            Por Mês
+            Lista
           </button>
           <button
-            className={`
-              bg-transparent border-none text-text-secondary text-[0.82rem] font-semibold
-              px-3.5 py-1.5 rounded-md transition-all duration-300 ease-in-out font-body cursor-pointer
-              hover:text-text-primary hover:bg-white/6
-              ${mode === 'week' ? 'bg-gradient-to-br from-accent-primary to-accent-secondary text-white' : ''}
-            `}
+            className={`px-4 py-1.5 font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'week' ? 'bg-primary text-background-dark' : 'text-text-muted hover:text-white'}`}
             onClick={() => handleModeChange('week')}
             type="button"
           >
-            Por Semana
+            Semana
           </button>
         </div>
       </div>
@@ -121,24 +107,24 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
       <div className="flex items-center gap-3 flex-wrap">
         {mode === 'month' ? (
           <select
-            className="flex-1 min-w-[200px] bg-white/5 border border-white/12 rounded-md text-text-primary font-body text-[0.9rem] py-2.5 px-4 custom-select cursor-pointer transition-all duration-300 ease-in-out focus:outline-none focus:border-accent-primary focus:shadow-[0_0_0_3px_rgba(139,92,246,0.15)] hover:border-white/25"
+            className="flex-1 min-w-[200px] bg-card-dark border border-border-muted rounded-sm text-text-main font-body text-sm py-2.5 px-4 custom-select cursor-pointer transition-all focus:outline-none focus:border-primary hover:border-primary/30 uppercase tracking-wider"
             value={selectedMonth}
             onChange={handleMonthChange}
             aria-label="Selecionar mês"
           >
-            <option value="">Selecione o mês...</option>
+            <option value="">SELECIONE O MÊS...</option>
             {monthOptions.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
         ) : (
           <select
-            className="flex-1 min-w-[200px] bg-white/5 border border-white/12 rounded-md text-text-primary font-body text-[0.9rem] py-2.5 px-4 custom-select cursor-pointer transition-all duration-300 ease-in-out focus:outline-none focus:border-accent-primary focus:shadow-[0_0_0_3px_rgba(139,92,246,0.15)] hover:border-white/25"
+            className="flex-1 min-w-[200px] bg-card-dark border border-border-muted rounded-sm text-text-main font-body text-sm py-2.5 px-4 custom-select cursor-pointer transition-all focus:outline-none focus:border-primary hover:border-primary/30 uppercase tracking-wider"
             value={selectedWeek}
             onChange={handleWeekChange}
             aria-label="Selecionar semana"
           >
-            <option value="">Selecione a sexta-feira...</option>
+            <option value="">SELECIONE A SEXTA-FEIRA...</option>
             {weekOptions.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
@@ -146,8 +132,8 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
         )}
 
         {hasFilter && (
-          <button className="bg-accent-secondary/12 border border-accent-secondary/30 text-accent-secondary font-body text-[0.82rem] font-semibold py-2.5 px-4 rounded-md transition-all duration-300 ease-in-out whitespace-nowrap hover:bg-accent-secondary/22 hover:border-accent-secondary" onClick={handleClear} type="button">
-            ✕ Limpar
+          <button className="bg-primary/10 border border-primary/30 text-primary font-body text-[10px] font-black uppercase tracking-widest py-2.5 px-4 rounded-sm transition-all hover:bg-primary/20 hover:border-primary" onClick={handleClear} type="button">
+            ✕ LIMPAR
           </button>
         )}
       </div>

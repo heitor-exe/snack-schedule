@@ -68,7 +68,7 @@ const AdminConfigModal = ({
   return (
     <div className="fixed inset-0 bg-black/85 backdrop-blur-[14px] flex items-center justify-center p-8 z-[1200]" role="presentation" onClick={onClose}>
       <div
-        className="bg-bg/95 border border-white/8 rounded-3xl max-w-[640px] w-full p-8 relative shadow-[0_30px_60px_-35px_rgba(0,0,0,0.7)]"
+        className="bg-card-dark border border-border-muted max-w-[640px] w-full p-8 relative shadow-[0_30px_60px_-35px_rgba(0,0,0,0.7)]"
         role="dialog"
         aria-modal="true"
         aria-label="Configuração administrativa"
@@ -76,50 +76,52 @@ const AdminConfigModal = ({
       >
         <header className="flex justify-between items-center mb-3">
           <div>
-            <p className="uppercase tracking-[0.35em] text-[0.7rem] text-text-secondary m-0">Admin da temporada</p>
-            <h3 className="m-0 text-2xl mt-0">Configurar período e membros</h3>
+            <p className="uppercase tracking-[0.35em] text-[10px] text-text-muted font-bold m-0">Admin da Temporada</p>
+            <h3 className="m-0 text-2xl mt-0 uppercase font-black tracking-tighter">Configurar Período e Membros</h3>
           </div>
-          <button className="bg-transparent border border-white/40 rounded-full text-text-secondary font-semibold px-4 py-1.5 transition-all duration-300 ease-in-out hover:border-accent-primary hover:text-white" onClick={onClose} type="button">
+          <button className="bg-transparent border border-border-muted text-text-muted font-bold px-4 py-1.5 text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary transition-all" onClick={onClose} type="button">
             Fechar
           </button>
         </header>
 
         {!isUnlocked ? (
-          <form onSubmit={handleUnlock} className="flex flex-col gap-3.5">
-            <p className="text-text-secondary my-1 mb-0 mt-0">
+          <form onSubmit={handleUnlock} className="flex flex-col gap-4">
+            <p className="text-text-muted text-sm">
               Entre com a senha de administrador para editar a temporada.
             </p>
-            <label className="block text-[0.85rem] text-text-secondary mb-1.5" htmlFor="admin-password">
-              Senha
-            </label>
-            <input
-              id="admin-password"
-              className="w-full bg-white/4 border border-white/14 rounded-xl text-text-primary py-2.5 px-3 text-[0.95rem] font-body focus:outline-2 focus:outline-accent-primary/50 focus:outline-offset-1"
-              type="password"
-              value={passwordInput}
-              onChange={(event) => setPasswordInput(event.target.value)}
-              placeholder="Digite a senha"
-              autoComplete="off"
-            />
-            {error && <p className="m-0 text-[#fca5a5] text-[0.9rem]">{error}</p>}
-            <button className="self-start py-2.5 px-4 rounded-full border-none cursor-pointer font-semibold bg-gradient-to-br from-accent-primary to-accent-secondary text-white shadow-[0_15px_40px_-20px_rgba(139,92,246,0.8)] transition-all duration-300 ease-in-out hover:-translate-y-px hover:shadow-[0_18px_45px_-20px_rgba(236,72,153,0.8)]" type="submit">
+            <div>
+              <label className="block text-[10px] text-text-muted uppercase tracking-widest font-bold mb-1.5" htmlFor="admin-password">
+                Senha
+              </label>
+              <input
+                id="admin-password"
+                className="w-full bg-card-dark border border-border-muted text-text-main py-2.5 px-3 text-sm font-body focus:outline-none focus:border-primary transition-all"
+                type="password"
+                value={passwordInput}
+                onChange={(event) => setPasswordInput(event.target.value)}
+                placeholder="DIGITE A SENHA"
+                autoComplete="off"
+              />
+            </div>
+            {error && <p className="m-0 text-red-400 text-sm font-bold uppercase tracking-wider">{error}</p>}
+            <button className="self-start bg-primary text-background-dark px-4 py-2 font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all neon-glow" type="submit">
               Entrar
             </button>
           </form>
         ) : (
-          <form onSubmit={handleSubmitConfig} className="flex flex-col gap-3.5">
-            <p className="text-text-secondary my-1 mb-0 mt-0">
+          <form onSubmit={handleSubmitConfig} className="flex flex-col gap-4">
+            <p className="text-text-muted text-sm">
               Atualize os dados e gere uma nova escala substituindo a temporada atual.
             </p>
 
-            <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-1">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[0.85rem] text-text-secondary mb-1.5" htmlFor="season-start">
-                  Início da temporada
+                <label className="block text-[10px] text-text-muted uppercase tracking-widest font-bold mb-1.5" htmlFor="season-start">
+                  Início da Temporada
                 </label>
                 <input
                   id="season-start"
-                  className="w-full bg-white/4 border border-white/14 rounded-xl text-text-primary py-2.5 px-3 text-[0.95rem] font-body focus:outline-2 focus:outline-accent-primary/50 focus:outline-offset-1"
+                  className="w-full bg-card-dark border border-border-muted text-text-main py-2.5 px-3 text-sm font-body focus:outline-none focus:border-primary transition-all"
                   type="date"
                   value={localConfig.startDate}
                   onChange={(event) =>
@@ -128,12 +130,12 @@ const AdminConfigModal = ({
                 />
               </div>
               <div>
-                <label className="block text-[0.85rem] text-text-secondary mb-1.5" htmlFor="season-end">
-                  Fim da temporada
+                <label className="block text-[10px] text-text-muted uppercase tracking-widest font-bold mb-1.5" htmlFor="season-end">
+                  Fim da Temporada
                 </label>
                 <input
                   id="season-end"
-                  className="w-full bg-white/4 border border-white/14 rounded-xl text-text-primary py-2.5 px-3 text-[0.95rem] font-body focus:outline-2 focus:outline-accent-primary/50 focus:outline-offset-1"
+                  className="w-full bg-card-dark border border-border-muted text-text-main py-2.5 px-3 text-sm font-body focus:outline-none focus:border-primary transition-all"
                   type="date"
                   value={localConfig.endDate}
                   onChange={(event) =>
@@ -143,24 +145,26 @@ const AdminConfigModal = ({
               </div>
             </div>
 
-            <label className="block text-[0.85rem] text-text-secondary mb-1.5" htmlFor="members-list">
-              Membros (1 por linha)
-            </label>
-            <textarea
-              id="members-list"
-              className="w-full bg-white/4 border border-white/14 rounded-xl text-text-primary py-2.5 px-3 text-[0.95rem] font-body resize-y min-h-[220px] focus:outline-2 focus:outline-accent-primary/50 focus:outline-offset-1"
-              rows={10}
-              value={localConfig.membersText}
-              onChange={(event) =>
-                setLocalConfig((prev) => ({ ...prev, membersText: event.target.value }))
-              }
-            />
+            <div>
+              <label className="block text-[10px] text-text-muted uppercase tracking-widest font-bold mb-1.5" htmlFor="members-list">
+                Membros (1 por Linha)
+              </label>
+              <textarea
+                id="members-list"
+                className="w-full bg-card-dark border border-border-muted text-text-main py-2.5 px-3 text-sm font-body resize-y min-h-[220px] focus:outline-none focus:border-primary transition-all"
+                rows={10}
+                value={localConfig.membersText}
+                onChange={(event) =>
+                  setLocalConfig((prev) => ({ ...prev, membersText: event.target.value }))
+                }
+              />
+            </div>
 
-            <p className="m-0 text-text-secondary text-[0.85rem]">{memberCount} membro(s) válido(s)</p>
-            {error && <p className="m-0 text-[#fca5a5] text-[0.9rem]">{error}</p>}
+            <p className="m-0 text-text-muted text-[10px] uppercase tracking-widest font-bold">{memberCount} membro(s) válido(s)</p>
+            {error && <p className="m-0 text-red-400 text-sm font-bold uppercase tracking-wider">{error}</p>}
 
-            <button className="self-start py-2.5 px-4 rounded-full border-none cursor-pointer font-semibold bg-gradient-to-br from-accent-primary to-accent-secondary text-white shadow-[0_15px_40px_-20px_rgba(139,92,246,0.8)] transition-all duration-300 ease-in-out hover:-translate-y-px hover:shadow-[0_18px_45px_-20px_rgba(236,72,153,0.8)] disabled:opacity-75 disabled:cursor-wait" type="submit" disabled={isSaving}>
-              {isSaving ? 'Gerando nova escala...' : 'Salvar e regenerar escala'}
+            <button className="self-start bg-primary text-background-dark px-4 py-2 font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all neon-glow disabled:opacity-50 disabled:cursor-wait" type="submit" disabled={isSaving}>
+              {isSaving ? 'GERANDO NOVA ESCALA...' : 'SALVAR E REGERAR ESCALA'}
             </button>
           </form>
         )}

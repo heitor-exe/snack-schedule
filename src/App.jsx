@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import SearchBar from './components/SearchBar';
 import MemberSelector from './components/MemberSelector';
 import AdminConfigModal from './components/AdminConfigModal';
 import AppHeader from './components/AppHeader';
@@ -62,11 +61,11 @@ function App() {
   }, [selectedMember]);
 
   useEffect(() => {
-    if (!selectedMember && allMembers.length > 0 && !hasAutoPrompted) {
+    if (!loading && !selectedMember && allMembers.length > 0 && !hasAutoPrompted) {
       setSelectorOpen(true);
       setHasAutoPrompted(true);
     }
-  }, [selectedMember, allMembers, hasAutoPrompted]);
+  }, [loading, selectedMember, allMembers, hasAutoPrompted]);
 
   const userRoleThisWeek = useMemo(
     () =>
@@ -75,7 +74,7 @@ function App() {
         : null,
     [selectedMember, currentSchedule]
   );
-  const identityRoleLabel = getRoleLabel(userRoleThisWeek);
+  const IdentityRoleLabel = getRoleLabel(userRoleThisWeek);
 
   const handleTogglePast = useCallback(() => {
     setShowPast((prev) => {
@@ -133,26 +132,22 @@ function App() {
   );
 
   return (
-    <div className="max-w-[1200px] mx-auto px-8 py-8 text-left">
+    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden hub-grid">
       <AppHeader
-        selectedMember={selectedMember}
-        identityRoleLabel={identityRoleLabel}
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+        resultCount={isSearchActive ? searchResults?.length ?? 0 : null}
         onOpenSelector={() => setSelectorOpen(true)}
         onOpenAdmin={() => setAdminOpen(true)}
+        selectedMember={selectedMember}
         onClearSelection={handleClearSelection}
       />
 
-      <main>
+      <main className="flex-1 max-w-7xl mx-auto w-full p-6 space-y-8">
         {loading ? (
           <LoadingState />
         ) : (
           <>
-            <SearchBar
-              value={searchQuery}
-              onChange={handleSearchChange}
-              resultCount={isSearchActive ? searchResults?.length ?? 0 : null}
-            />
-
             {isSearchActive ? (
               <SearchModeView
                 searchResults={searchResults}

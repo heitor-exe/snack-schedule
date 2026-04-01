@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function LoadingState({ message = 'Carregando escalas...' }) {
-  return <div className="text-center text-xl text-text-secondary py-20">{message}</div>;
+export default function LoadingState({ message = 'CARREGANDO ESCALAS...' }) {
+  return <div className="text-center text-lg text-text-muted uppercase tracking-widest font-bold py-20">{message}</div>;
 }
