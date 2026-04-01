@@ -1,6 +1,5 @@
 import React from 'react';
 import ScheduleCard from './ScheduleCard';
-import './ScheduleList.css';
 
 /**
  * Props:
@@ -18,14 +17,14 @@ const ScheduleList = ({
 }) => {
   if (!schedules || schedules.length === 0) {
     return (
-      <div className="loading">
+      <div className="text-center text-2xl text-text-secondary py-16">
         Nenhuma escala encontrada para o período selecionado.
       </div>
     );
   }
 
   return (
-    <div className="schedule-grid">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8 py-4">
       {schedules.map((schedule) => (
         <ScheduleCard
           key={schedule.date}
