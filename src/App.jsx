@@ -6,6 +6,7 @@ import AppFooter from './components/AppFooter';
 import LoadingState from './components/LoadingState';
 import SearchModeView from './components/SearchModeView';
 import NormalModeView from './components/NormalModeView';
+import PwaInstallBanner from './components/PwaInstallBanner';
 import { useSchedules } from './hooks/useSchedules';
 import { useSeasonConfig } from './hooks/useSeasonConfig';
 import { useCurrentSchedule } from './hooks/useCurrentSchedule';
@@ -19,7 +20,7 @@ import {
 
 const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
 
-function App() {
+function App({ deferredInstallPrompt }) {
   const { config: seasonConfig, updateConfig: setSeasonConfig } = useSeasonConfig();
   const { schedules, loading, regenerateSchedules } = useSchedules(seasonConfig);
   const { currentSchedule, pastSchedules, upcomingSchedules } = useCurrentSchedule(schedules);
@@ -190,6 +191,7 @@ function App() {
       )}
 
       <AppFooter />
+      <PwaInstallBanner deferredInstallPrompt={deferredInstallPrompt} />
     </div>
   );
 }
