@@ -2,48 +2,42 @@
 
 @theme {
   /* Fonts */
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Figtree', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
 
-  /* Colors */
-  --color-bg: #0d0d0d;
-  --color-card: rgba(255, 255, 255, 0.05);
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a1a1aa;
-  --color-accent-primary: #8b5cf6;
-  --color-accent-secondary: #ec4899;
-  --color-food: #f59e0b;
-  --color-drink: #3b82f6;
-  --color-free: #10b981;
-  --color-user-accent: #f97316;
-  --color-user-accent-strong: #ea580c;
+  /* Direction B — Technical / Cyberpunk */
+  --color-primary: #00FFC2;
+  --color-food: #FDCB29;
+  --color-drink: #4BC3FA;
+  --color-background-dark: #0A0A0B;
+  --color-card-dark: #161618;
+  --color-border-muted: #2A2A2E;
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #8E8E93;
 
-  /* Border radius */
-  --radius-default: 12px;
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-2xl: 24px;
+  /* User accent (orange for selected member) */
+  --color-user-accent: #F97316;
+  --color-user-accent-strong: #EA580C;
+
+  /* Search highlight — hot pink/magenta, distinct from food/drink/primary */
+  --color-search-highlight: #FF3366;
+
+  /* Border radius — sharp by default */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
   --radius-full: 9999px;
 
-  /* Transitions */
-  --transition-all: all 0.3s ease;
-
   /* Animations */
-  --animate-pulse-dot: pulse-dot 1.5s ease-in-out infinite;
+  --animate-ping-slow: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
   --animate-fade-in: fade-in 0.2s ease;
 
-  /* Keyframes */
-  --keyframes-pulse-dot: {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.7); }
-  };
-
-  --keyframes-fade-in: {
+  @keyframes fade-in {
     from { opacity: 0; transform: translateY(-4px); }
     to { opacity: 0.8; transform: translateY(0); }
-  };
+  }
 }
 
 /* Base styles */
@@ -52,13 +46,10 @@
     margin: 0;
     padding: 0;
     font-family: var(--font-body);
-    background-color: var(--color-bg);
-    color: var(--color-text-primary);
+    background-color: var(--color-background-dark);
+    color: var(--color-text-main);
     min-height: 100vh;
     overflow-x: hidden;
-    background-image: 
-      radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 20%),
-      radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 20%);
   }
 
   * {
@@ -68,45 +59,47 @@
   button {
     cursor: pointer;
   }
+
+  /* Material Symbols default */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-size: 24px;
+    line-height: 1;
+  }
 }
 
-/* Complex patterns that need custom CSS */
+/* Component utilities */
 @layer components {
-  /* Gradient border for CurrentWeekCard */
-  .gradient-border {
-    position: relative;
-    background: var(--color-card);
-    border-radius: var(--radius-lg);
-    padding: 2rem;
-    backdrop-filter: blur(16px);
-    box-shadow: 0 20px 60px -10px rgba(139, 92, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  /* Grid background pattern */
+  .hub-grid {
+    background-image:
+      linear-gradient(var(--color-card-dark) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-card-dark) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 
-  .gradient-border::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--radius-lg);
-    padding: 2px;
-    background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+  /* Neon glow effect */
+  .neon-glow {
+    box-shadow: 0 0 15px rgba(0, 255, 194, 0.3);
+  }
+
+  /* Data-table header gradient */
+  .data-table-header {
+    background: linear-gradient(to bottom, var(--color-card-dark), var(--color-background-dark));
   }
 
   /* Custom select arrow */
   .custom-select {
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a1a1aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238E8E93' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.9rem center;
     padding-right: 2.2rem;
   }
 
   .custom-select option {
-    background: #1a1a2e;
-    color: var(--color-text-primary);
+    background: var(--color-card-dark);
+    color: var(--color-text-main);
   }
 }

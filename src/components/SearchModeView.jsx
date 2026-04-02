@@ -9,7 +9,6 @@ export default function SearchModeView({
   searchPast,
   showPast,
   onTogglePast,
-  onNameClick,
   activeQuery,
   selectedMember,
   currentSchedule,
@@ -18,7 +17,7 @@ export default function SearchModeView({
 
   if (!searchResults || searchResults.length === 0) {
     return (
-      <p className="text-text-secondary text-center text-lg">
+      <p className="text-text-muted text-center text-lg uppercase tracking-widest font-bold">
         Tente um nome diferente ou verifique a ortografia.
       </p>
     );
@@ -32,7 +31,6 @@ export default function SearchModeView({
       {currentSchedule && isCurrentInResults && (
         <CurrentWeekCard
           schedule={currentSchedule}
-          onNameClick={onNameClick}
           activeQuery={activeQuery}
           selectedMember={selectedMember}
         />
@@ -40,13 +38,13 @@ export default function SearchModeView({
 
       {searchUpcoming.length > 0 && (
         <section className="mt-12">
-          <h2 className="text-base font-bold tracking-[0.06em] uppercase mb-6 pl-1 text-left bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
-            📅 Próximas escalas
+          <h2 className="text-2xl font-black flex items-center gap-3 text-text-main uppercase tracking-tighter mb-6">
+            <span className="material-symbols-outlined text-primary">calendar_month</span>
+            Próximas Datas
           </h2>
           <ScheduleList
             schedules={searchUpcoming}
             isPast={false}
-            onNameClick={onNameClick}
             activeQuery={activeQuery}
             selectedMember={selectedMember}
           />
@@ -62,14 +60,14 @@ export default function SearchModeView({
           />
 
           {showPast && (
-            <section ref={pastSectionRef} className="mt-16 pt-8 border-t border-white/6">
-              <h2 className="text-base font-bold tracking-[0.06em] uppercase mb-6 pl-1 text-left text-text-secondary">
-                🗓️ Escalas anteriores
+            <section ref={pastSectionRef} className="mt-16 pt-8 border-t border-border-muted">
+              <h2 className="text-2xl font-black flex items-center gap-3 text-text-muted uppercase tracking-tighter mb-6">
+                <span className="material-symbols-outlined">history</span>
+                Escalas Anteriores
               </h2>
               <ScheduleList
                 schedules={searchPast}
                 isPast={true}
-                onNameClick={onNameClick}
                 activeQuery={activeQuery}
                 selectedMember={selectedMember}
               />
