@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dev-dist
+dev-dist
 *.local
 
 # Editor directories and files
@@ -24,5 +26,8 @@ dist-ssr
 *.sw?
 .env
 
-# Agents
+# MD files
 brainstorm_escalas.md
+
+# Docs
+docs/*
