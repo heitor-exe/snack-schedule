@@ -92,7 +92,7 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
             onClick={() => handleModeChange('month')}
             type="button"
           >
-            Lista
+            Mês
           </button>
           <button
             className={`px-4 py-1.5 font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'week' ? 'bg-primary text-background-dark' : 'text-text-muted hover:text-white'}`}

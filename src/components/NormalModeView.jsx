@@ -12,7 +12,6 @@ export default function NormalModeView({
   showPast,
   onTogglePast,
   onFilterChange,
-  onNameClick,
   activeQuery,
   selectedMember,
 }) {
@@ -23,7 +22,6 @@ export default function NormalModeView({
       {currentSchedule && (
         <CurrentWeekCard
           schedule={currentSchedule}
-          onNameClick={onNameClick}
           activeQuery={activeQuery}
           selectedMember={selectedMember}
         />
@@ -40,12 +38,11 @@ export default function NormalModeView({
         <section className="mt-12">
           <h2 className="text-2xl font-black flex items-center gap-3 text-text-main uppercase tracking-tighter mb-6">
             <span className="material-symbols-outlined text-primary">calendar_month</span>
-            Próximas Datas
+            Próximas Escalas
           </h2>
           <ScheduleList
             schedules={displayedUpcoming}
             isPast={false}
-            onNameClick={onNameClick}
             activeQuery={activeQuery}
             selectedMember={selectedMember}
           />
@@ -69,7 +66,6 @@ export default function NormalModeView({
               <ScheduleList
                 schedules={pastSchedules}
                 isPast={true}
-                onNameClick={onNameClick}
                 activeQuery={activeQuery}
                 selectedMember={selectedMember}
               />

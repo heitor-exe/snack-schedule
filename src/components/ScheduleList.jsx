@@ -4,7 +4,6 @@ import ScheduleCard from './ScheduleCard';
 const ScheduleList = ({
   schedules,
   isPast = false,
-  onNameClick,
   activeQuery = '',
   selectedMember = '',
 }) => {
@@ -23,7 +22,6 @@ const ScheduleList = ({
           key={schedule.date}
           schedule={schedule}
           isPast={isPast}
-          onNameClick={onNameClick}
           activeQuery={activeQuery}
           selectedMember={selectedMember}
         />

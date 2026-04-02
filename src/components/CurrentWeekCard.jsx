@@ -19,7 +19,7 @@ const getDaysLabel = (days) => {
   return `HÁ ${Math.abs(days)} DIAS`;
 };
 
-const NameTag = ({ name, isSelected, isSearchMatch }) => {
+const NameTag = ({ name, isSelected, isSearchMatch, role }) => {
   if (isSearchMatch) {
     return (
       <span className="text-search-highlight bg-search-highlight/10 border border-search-highlight/40 font-bold px-2 py-0.5 rounded-sm shadow-[0_0_12px_rgba(255,51,102,0.3)]">
@@ -28,8 +28,26 @@ const NameTag = ({ name, isSelected, isSearchMatch }) => {
     );
   }
   if (isSelected) {
+    const roleConfig = {
+      food: {
+        class: 'text-food bg-food/10 border-food/40 font-bold px-2 py-0.5 rounded-sm',
+        shadow: '0 0 12px rgba(253,203,41,0.3)',
+      },
+      drink: {
+        class: 'text-drink bg-drink/10 border-drink/40 font-bold px-2 py-0.5 rounded-sm',
+        shadow: '0 0 12px rgba(75,195,250,0.3)',
+      },
+      free: {
+        class: 'text-text-muted bg-text-muted/10 border-border-muted font-bold px-2 py-0.5 rounded-sm',
+        shadow: '0 0 12px rgba(0,255,194,0.2)',
+      },
+    };
+    const config = roleConfig[role] || {
+      class: 'text-primary bg-primary/10 border-primary/40 font-bold px-2 py-0.5 rounded-sm',
+      shadow: '0 0 12px rgba(0,255,194,0.2)',
+    };
     return (
-      <span className="text-primary bg-primary/10 border-primary/40 font-bold px-2 py-0.5 rounded-sm shadow-[0_0_12px_rgba(0,255,194,0.2)]">
+      <span className={config.class} style={{ boxShadow: config.shadow }}>
         {name}
       </span>
     );
@@ -37,7 +55,7 @@ const NameTag = ({ name, isSelected, isSearchMatch }) => {
   return <span className="text-text-muted">{name}</span>;
 };
 
-const TeamNames = ({ names, selectedMember, activeQuery }) => {
+const TeamNames = ({ names, selectedMember, activeQuery, role }) => {
   if (!selectedMember && !activeQuery) {
     return <p className="text-sm font-bold leading-relaxed text-text-main">{names.join(', ')}</p>;
   }
@@ -51,6 +69,7 @@ const TeamNames = ({ names, selectedMember, activeQuery }) => {
             name={name}
             isSelected={name === selectedMember}
             isSearchMatch={trimmed.length > 0 && normalize(name).includes(normalize(trimmed))}
+            role={role}
           />
         </React.Fragment>
       ))}
@@ -69,7 +88,7 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
 
   return (
     <section className="w-full border-b border-border-muted bg-background-dark/50 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-6 py-10">
+      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left: Info */}
           <div className="lg:col-span-4 space-y-4">
@@ -80,7 +99,7 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
               </span>
               Semana Atual
             </div>
-            <h2 className="text-5xl font-black text-text-main leading-none uppercase tracking-tighter">
+            <h2 className="text-3xl sm:text-5xl font-black text-text-main leading-none uppercase tracking-tighter">
               {formatDatePT(new Date(date + 'T00:00:00')).toUpperCase()}
             </h2>
             <p className="text-text-muted text-sm leading-relaxed border-l-2 border-border-muted pl-4">
@@ -98,7 +117,7 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
                 <h3 className="font-bold text-xs uppercase tracking-widest">Comida</h3>
               </div>
               <div className="space-y-3">
-                <TeamNames names={food_team} selectedMember={selectedMember} activeQuery={activeQuery} />
+                <TeamNames names={food_team} selectedMember={selectedMember} activeQuery={activeQuery} role="food" />
                 <div className="bg-food/10 px-2 py-1 inline-block border border-food/30">
                   <p className="text-[9px] text-food uppercase tracking-widest font-bold">{food_team.length} MEMBRO(S)</p>
                 </div>
@@ -112,7 +131,7 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
                 <h3 className="font-bold text-xs uppercase tracking-widest">Bebida</h3>
               </div>
               <div className="space-y-3">
-                <TeamNames names={drink_team} selectedMember={selectedMember} activeQuery={activeQuery} />
+                <TeamNames names={drink_team} selectedMember={selectedMember} activeQuery={activeQuery} role="drink" />
                 <div className="bg-drink/10 px-2 py-1 inline-block border border-drink/30">
                   <p className="text-[9px] text-drink uppercase tracking-widest font-bold">{drink_team.length} MEMBRO(S)</p>
                 </div>
@@ -126,7 +145,7 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
                 <h3 className="font-bold text-xs uppercase tracking-widest">Folga</h3>
               </div>
               <div className="space-y-3">
-                <TeamNames names={free_team} selectedMember={selectedMember} activeQuery={activeQuery} />
+                <TeamNames names={free_team} selectedMember={selectedMember} activeQuery={activeQuery} role="free" />
                 <div className="bg-card-dark px-2 py-1 inline-block border border-border-muted">
                   <p className="text-[9px] text-text-muted uppercase tracking-widest font-bold">{free_team.length} MEMBRO(S)</p>
                 </div>

@@ -10,9 +10,9 @@ const MemberSelector = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/85 backdrop-blur-[14px] flex items-center justify-center p-8 z-[1200]" role="presentation" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/85 backdrop-blur-[14px] flex items-center justify-center p-4 sm:p-8 z-[1200]" role="presentation" onClick={onClose}>
       <div
-        className="bg-card-dark border border-border-muted max-w-[640px] w-full p-8 relative shadow-[0_30px_60px_-35px_rgba(0,0,0,0.7)]"
+        className="bg-card-dark border border-border-muted max-w-[640px] w-full p-4 sm:p-8 relative shadow-[0_30px_60px_-35px_rgba(0,0,0,0.7)]"
         role="dialog"
         aria-modal="true"
         aria-label="Seleção de membro"

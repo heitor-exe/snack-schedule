@@ -9,7 +9,6 @@ export default function SearchModeView({
   searchPast,
   showPast,
   onTogglePast,
-  onNameClick,
   activeQuery,
   selectedMember,
   currentSchedule,
@@ -32,7 +31,6 @@ export default function SearchModeView({
       {currentSchedule && isCurrentInResults && (
         <CurrentWeekCard
           schedule={currentSchedule}
-          onNameClick={onNameClick}
           activeQuery={activeQuery}
           selectedMember={selectedMember}
         />
@@ -47,7 +45,6 @@ export default function SearchModeView({
           <ScheduleList
             schedules={searchUpcoming}
             isPast={false}
-            onNameClick={onNameClick}
             activeQuery={activeQuery}
             selectedMember={selectedMember}
           />
@@ -71,7 +68,6 @@ export default function SearchModeView({
               <ScheduleList
                 schedules={searchPast}
                 isPast={true}
-                onNameClick={onNameClick}
                 activeQuery={activeQuery}
                 selectedMember={selectedMember}
               />

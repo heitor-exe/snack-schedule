@@ -88,12 +88,6 @@ function App() {
     });
   }, []);
 
-  const handleNameClick = useCallback((name) => {
-    handleSearchChange(name);
-    setShowPast(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [handleSearchChange]);
-
   const handleMemberSelect = useCallback((name) => {
     setSelectedMember(name);
     setSelectorOpen(false);
@@ -143,7 +137,7 @@ function App() {
         onClearSelection={handleClearSelection}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full p-6 space-y-8">
+      <main className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 space-y-8">
         {loading ? (
           <LoadingState />
         ) : (
@@ -155,7 +149,6 @@ function App() {
                 searchPast={searchPast}
                 showPast={showPast}
                 onTogglePast={handleTogglePast}
-                onNameClick={handleNameClick}
                 activeQuery={searchQuery}
                 selectedMember={selectedMember}
                 currentSchedule={currentSchedule}
@@ -169,7 +162,6 @@ function App() {
                 showPast={showPast}
                 onTogglePast={handleTogglePast}
                 onFilterChange={handleFilterChange}
-                onNameClick={handleNameClick}
                 activeQuery={searchQuery}
                 selectedMember={selectedMember}
               />
