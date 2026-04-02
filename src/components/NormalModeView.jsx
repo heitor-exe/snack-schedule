@@ -12,7 +12,6 @@ export default function NormalModeView({
   showPast,
   onTogglePast,
   onFilterChange,
-  onNameClick,
   activeQuery,
   selectedMember,
 }) {
@@ -23,7 +22,6 @@ export default function NormalModeView({
       {currentSchedule && (
         <CurrentWeekCard
           schedule={currentSchedule}
-          onNameClick={onNameClick}
           activeQuery={activeQuery}
           selectedMember={selectedMember}
         />
@@ -38,13 +36,13 @@ export default function NormalModeView({
 
       {displayedUpcoming.length > 0 && (
         <section className="mt-12">
-          <h2 className="text-base font-bold tracking-[0.06em] uppercase mb-6 pl-1 text-left bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
-            📅 Próximas escalas
+          <h2 className="text-2xl font-black flex items-center gap-3 text-text-main uppercase tracking-tighter mb-6">
+            <span className="material-symbols-outlined text-primary">calendar_month</span>
+            Próximas Escalas
           </h2>
           <ScheduleList
             schedules={displayedUpcoming}
             isPast={false}
-            onNameClick={onNameClick}
             activeQuery={activeQuery}
             selectedMember={selectedMember}
           />
@@ -60,14 +58,14 @@ export default function NormalModeView({
           />
 
           {showPast && (
-            <section ref={pastSectionRef} className="mt-16 pt-8 border-t border-white/6">
-              <h2 className="text-base font-bold tracking-[0.06em] uppercase mb-6 pl-1 text-left text-text-secondary">
-                🗓️ Escalas anteriores
+            <section ref={pastSectionRef} className="mt-16 pt-8 border-t border-border-muted">
+              <h2 className="text-2xl font-black flex items-center gap-3 text-text-muted uppercase tracking-tighter mb-6">
+                <span className="material-symbols-outlined">history</span>
+                Escalas Anteriores
               </h2>
               <ScheduleList
                 schedules={pastSchedules}
                 isPast={true}
-                onNameClick={onNameClick}
                 activeQuery={activeQuery}
                 selectedMember={selectedMember}
               />
