@@ -1,63 +1,191 @@
-# Youth Cell Snack Schedule
+# 📅 Escala do Lanche — Célula de Jovens
 
-A premium React application for managing snack schedules.
+A premium, cyberpunk-themed React application for managing weekly snack schedules (*escala do lanche*) for a church youth cell. Built with performance, accessibility, and visual impact in mind.
+
+> **[Live Demo](https://snack-schedule.vercel.app/)**
+
+---
+
+## ✨ Features
+
+- **🔍 Smart Search** — Find any volunteer across all schedules with accent-insensitive matching
+- **👤 Personalized View** — Identify yourself once and the app highlights your role (Food / Drink / Free) every week
+- **📋 Copy to Clipboard** — One-click formatted schedule export, ready to paste into WhatsApp groups
+- **🔄 Auto-Regenerate** — Admin panel to regenerate balanced schedules with new date ranges and team members
+- **💾 Persistent Storage** — Schedules stored in Supabase so they never reset between refreshes
+- **📱 Fully Responsive** — Mobile-first design with adaptive layouts for all screen sizes
+- **🎨 Cyberpunk Aesthetic** — Neon accents, grid backgrounds, and sharp typography
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | React 19 + Vite 7 |
+| **Styling** | Tailwind CSS v4 |
+| **Database** | Supabase (PostgreSQL) |
+| **Fonts** | Plus Jakarta Sans + Material Symbols Outlined |
+| **Linting** | ESLint (flat config) |
+
+---
 
 ## 🚀 Quick Start
 
-1.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
+### Prerequisites
 
-2.  **Run locally**:
-    ```bash
-    npm run dev
-    ```
+- [Node.js](https://nodejs.org/) 18+ and npm
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/heitor-exe/calendar-cell.git
+   cd calendar-cell
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**:
+   ```bash
+   cp .env.example .env
+   ```
+   Then edit `.env` with your Supabase credentials (see [Database Setup](#-database-setup) below).
+
+4. **Start the dev server**:
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
 
 ## 🗄️ Database Setup
 
-This app uses **Supabase** to store schedules so they don't change every time you refresh.
+This app uses **Supabase** to persist schedules so they don't regenerate on every refresh.
 
-1.  Go to [Supabase](https://supabase.com/) and create a free project.
-2.  In your project dashboard, go to **SQL Editor** and run this query to create the table:
-    ```sql
-    create table schedules (
-      id uuid default uuid_generate_v4() primary key,
-      date date not null unique,
-      food_team jsonb not null,
-      drink_team jsonb not null,
-      free_team jsonb not null,
-      created_at timestamp with time zone default timezone('utc'::text, now()) not null
-    );
-    ```
-3.  Copy `.env.example` to `.env.local` and fill in your keys:
-    ```bash
-    VITE_SUPABASE_URL=your_project_url
-    VITE_SUPABASE_ANON_KEY=your_anon_key
-    ```
-4.  Restart the dev server. The app will automatically generate and save the schedule on the first load if the database is empty.
+### 1. Create a Supabase Project
 
-## 🌍 Deployment (How to put it online)
+Go to [supabase.com](https://supabase.com/) and create a free project.
 
-The easiest way to host this for free is using **Vercel** or **Netlify**.
+### 2. Create the Table
 
-### Option 1: Vercel (Recommended)
-1.  Push this code to a GitHub repository.
-2.  Go to [Vercel.com](https://vercel.com) and sign up/login.
-3.  Click **"Add New..."** -> **"Project"**.
-4.  Import your GitHub repository.
-5.  **Important**: In the configuration step, find the **"Environment Variables"** section.
-6.  Add the same variables you used locally:
-    -   `VITE_SUPABASE_URL`
-    -   `VITE_SUPABASE_ANON_KEY`
-7.  Click **Deploy**.
+In your Supabase dashboard, open **SQL Editor** and run:
 
-### Option 2: Netlify
-1.  Push code to GitHub.
-2.  Go to [Netlify.com](https://netlify.com).
-3.  **"Add new site"** -> **"Import an existing project"**.
-4.  Select your repo.
-5.  In **"Site settings"** or **"Environment variables"**, add the Supabase keys.
-6.  Deploy.
+```sql
+create table schedules (
+  id uuid default uuid_generate_v4() primary key,
+  date date not null unique,
+  food_team jsonb not null,
+  drink_team jsonb not null,
+  free_team jsonb not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+```
 
-Once deployed, anyone with the link can view the schedule!
+### 3. Configure Environment Variables
+
+Copy `.env.example` to `.env` (or `.env.local`) and fill in your keys:
+
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_key
+VITE_ADMIN_PASSWORD=your_admin_password
+```
+
+### 4. Restart
+
+```bash
+npm run dev
+```
+
+On first load, the app will automatically generate and save schedules to your database if the table is empty.
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+  components/    React UI components
+  hooks/         Custom React hooks (data fetching, state logic)
+  services/      Supabase client singleton
+  utils/         Pure utility functions (scheduling, dates, filtering)
+  App.jsx        Root orchestrator
+  main.jsx       Entry point
+  index.css      Tailwind v4 @theme block + design tokens
+```
+
+---
+
+## 🎮 Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | Production build to `dist/` |
+| `npm run lint` | Run ESLint |
+| `npm run lint -- --fix` | Run ESLint with auto-fix |
+| `npm run preview` | Preview production build |
+
+---
+
+## 🎨 Design Tokens
+
+| Token | Value | Usage |
+|---|---|---|
+| Primary Neon | `#00FFC2` | Accents, borders, highlights |
+| Food | `#FDCB29` | Food team indicators |
+| Drink | `#4BC3FA` | Drink team indicators |
+| Search Highlight | `#FF3366` | Search match highlights |
+| Background | `#0A0A0B` | Page background |
+| Card | `#161618` | Card surfaces |
+| Border | `#2A2A2E` | Muted borders |
+
+---
+
+## 🌍 Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Go to [vercel.com](https://vercel.com) → **New Project**
+3. Import your repository
+4. Add environment variables in the deployment settings:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_ADMIN_PASSWORD`
+5. Click **Deploy**
+
+### Netlify
+
+1. Push code to GitHub
+2. Go to [netlify.com](https://netlify.com) → **Add new site** → **Import an existing project**
+3. Select your repo and configure environment variables
+4. Deploy
+
+---
+
+## 🧑‍💻 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+<p align="center">
+  Made with 💚 by <a href="https://github.com/heitor-exe">Heitor Macedo</a>
+</p>
