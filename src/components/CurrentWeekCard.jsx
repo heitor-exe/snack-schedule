@@ -156,14 +156,13 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
 
         {/* User status */}
         {selectedMember && (
-          <div className={`mt-6 flex flex-wrap items-center gap-3 px-4 py-3 rounded-sm border ${
-            userRole === 'food' ? 'bg-food/5 border-food/30' :
-            userRole === 'drink' ? 'bg-drink/5 border-drink/30' :
-            userRole === 'free' ? 'bg-primary/5 border-primary/30' :
-            'bg-card-dark border-border-muted'
-          }`}>
+          <div className={`mt-6 flex flex-wrap items-center gap-3 px-4 py-3 rounded-sm border ${userRole === 'food' ? 'bg-food/5 border-food/30' :
+              userRole === 'drink' ? 'bg-drink/5 border-drink/30' :
+                userRole === 'free' ? 'bg-primary/5 border-primary/30' :
+                  'bg-card-dark border-border-muted'
+            }`}>
             <span className="text-text-muted text-sm">
-              Identificado como <strong className="text-text-main">{selectedMember}</strong>
+              Identificado como<strong className="text-text-main ml-1">{selectedMember}</strong>
             </span>
             <span className={`
               text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-sm
@@ -172,7 +171,7 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
               ${userRole === 'free' ? 'bg-primary/10 text-primary border border-primary/30' : ''}
               ${!userRole ? 'bg-card-dark text-text-muted border border-border-muted' : ''}
             `}>
-              {userRoleLabel ? `É ${userRoleLabel.toUpperCase()}` : 'SEM ESCALA NESTA SEMANA'}
+              {userRoleLabel ? `${userRoleLabel.toUpperCase()}` : 'SEM ESCALA NESTA SEMANA'}
             </span>
             <span className="text-primary text-[10px] font-black uppercase tracking-widest ml-auto">
               {daysLabel}
