@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
+import React, { memo } from 'react';
 import CurrentWeekCard from './CurrentWeekCard';
 import ScheduleList from './ScheduleList';
 import PastToggle from './PastToggle';
 
-export default function SearchModeView({
+export default memo(function SearchModeView({
   searchResults,
   searchUpcoming,
   searchPast,
@@ -13,7 +13,6 @@ export default function SearchModeView({
   selectedMember,
   currentSchedule,
 }) {
-  const pastSectionRef = useRef(null);
 
   if (!searchResults || searchResults.length === 0) {
     return (
@@ -60,7 +59,7 @@ export default function SearchModeView({
           />
 
           {showPast && (
-            <section ref={pastSectionRef} className="mt-16 pt-8 border-t border-border-muted">
+            <section className="mt-16 pt-8 border-t border-border-muted">
               <h2 className="text-2xl font-black flex items-center gap-3 text-text-muted uppercase tracking-tighter mb-6">
                 <span className="material-symbols-outlined">history</span>
                 Escalas Anteriores
@@ -77,4 +76,4 @@ export default function SearchModeView({
       )}
     </>
   );
-}
+});

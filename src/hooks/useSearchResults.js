@@ -1,9 +1,10 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useTransition } from 'react';
 import { filterByName } from '../utils/filterUtils';
 
 export function useSearchResults(schedules, currentSchedule = null) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredSchedules, setFilteredSchedules] = useState(null);
+  const [isPending, startTransition] = useTransition();
 
   const isSearchActive = searchQuery.trim().length > 0;
 
@@ -55,8 +56,10 @@ export function useSearchResults(schedules, currentSchedule = null) {
   }, []);
 
   const handleFilterChange = useCallback((result) => {
-    setFilteredSchedules(result);
-  }, []);
+    startTransition(() => {
+      setFilteredSchedules(result);
+    });
+  }, [startTransition]);
 
   return {
     searchQuery,
@@ -67,6 +70,7 @@ export function useSearchResults(schedules, currentSchedule = null) {
     searchPast,
     displayedUpcoming,
     filteredSchedules,
+    isPending,
     handleSearchChange,
     handleFilterChange,
   };

@@ -1,4 +1,23 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
+
+const MemberButton = memo(function MemberButton({ member, isSelected, onSelect }) {
+  return (
+    <button
+      type="button"
+      className={`
+        py-2.5 px-3 border text-sm font-bold uppercase tracking-wider text-center
+        transition-all
+        ${isSelected
+          ? 'border-primary bg-primary text-background-dark font-black shadow-[0_0_15px_rgba(0,255,194,0.3)]'
+          : 'border-border-muted bg-card-dark text-text-muted hover:border-primary/50 hover:text-primary'
+        }
+      `}
+      onClick={() => onSelect(member)}
+    >
+      {member}
+    </button>
+  );
+});
 
 const MemberSelector = ({
   isOpen,
@@ -7,6 +26,14 @@ const MemberSelector = ({
   onSelect,
   onClose,
 }) => {
+  const handleOverlayClick = useCallback(
+    (event) => {
+      event.stopPropagation();
+      onClose();
+    },
+    [onClose],
+  );
+
   if (!isOpen) return null;
 
   return (
@@ -16,7 +43,7 @@ const MemberSelector = ({
         role="dialog"
         aria-modal="true"
         aria-label="Seleção de membro"
-        onClick={(event) => event.stopPropagation()}
+        onClick={handleOverlayClick}
       >
         <header className="flex justify-between items-center mb-3">
           <div>
@@ -37,24 +64,12 @@ const MemberSelector = ({
             <p className="text-text-muted text-sm col-span-full text-center uppercase tracking-widest font-bold">Nenhum membro carregado. Aguarde.</p>
           )}
           {members.map((member) => (
-            <button
+            <MemberButton
               key={member}
-              type="button"
-              className={`
-                py-2.5 px-3 border text-sm font-bold uppercase tracking-wider text-center
-                transition-all
-                ${selectedMember === member
-                  ? 'border-primary bg-primary text-background-dark font-black shadow-[0_0_15px_rgba(0,255,194,0.3)]'
-                  : 'border-border-muted bg-card-dark text-text-muted hover:border-primary/50 hover:text-primary'
-                }
-              `}
-              onClick={(event) => {
-                event.stopPropagation();
-                onSelect(member);
-              }}
-            >
-              {member}
-            </button>
+              member={member}
+              isSelected={selectedMember === member}
+              onSelect={onSelect}
+            />
           ))}
         </div>
 
@@ -66,4 +81,4 @@ const MemberSelector = ({
   );
 };
 
-export default MemberSelector;
+export default memo(MemberSelector);

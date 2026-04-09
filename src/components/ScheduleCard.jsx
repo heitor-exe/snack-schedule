@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { getRoleForSchedule, getRoleLabel } from '../utils/userUtils';
 import { normalize } from '../utils/filterUtils';
 
-const NameTag = ({ name, isSearchMatch }) => {
+const NameTag = memo(function NameTag({ name, isSearchMatch }) {
   if (isSearchMatch) {
     return (
       <span className="text-search-highlight bg-search-highlight/10 border border-search-highlight/40 font-bold px-2 py-0.5 rounded-sm shadow-[0_0_12px_rgba(255,51,102,0.3)]">
@@ -11,9 +11,9 @@ const NameTag = ({ name, isSearchMatch }) => {
     );
   }
   return <span className="text-text-muted">{name}</span>;
-};
+});
 
-const TeamNames = ({ names, activeQuery }) => {
+const TeamNames = memo(function TeamNames({ names, activeQuery }) {
   if (!activeQuery?.trim()) {
     return <p className="text-xs font-bold text-text-main">{names.join(', ')}</p>;
   }
@@ -31,14 +31,14 @@ const TeamNames = ({ names, activeQuery }) => {
       ))}
     </p>
   );
-};
+});
 
-const ScheduleCard = ({
+const ScheduleCard = memo(function ScheduleCard({
   schedule,
   isPast = false,
   selectedMember = '',
   activeQuery = '',
-}) => {
+}) {
   const [copied, setCopied] = useState(false);
 
   if (!schedule) return null;
@@ -141,6 +141,6 @@ const ScheduleCard = ({
       </div>
     </div>
   );
-};
+});
 
 export default ScheduleCard;

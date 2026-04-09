@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
 
 function isIOS() {
   if (typeof window === 'undefined') return false;
@@ -115,4 +115,4 @@ function PwaInstallBanner({ deferredInstallPrompt: initialPrompt }) {
   );
 }
 
-export default PwaInstallBanner;
+export default memo(PwaInstallBanner);

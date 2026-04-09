@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback, memo } from 'react';
 
 const parseMembers = (rawValue) =>
   rawValue
@@ -18,6 +18,15 @@ const AdminConfigModal = ({
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [error, setError] = useState('');
   const [localConfig, setLocalConfig] = useState(currentConfig);
+
+  // Modal is conditionally mounted in App.jsx (adminOpen && ...),
+  // so state is always fresh on open. Reset on close for safety.
+  const handleClose = useCallback(() => {
+    setPasswordInput('');
+    setIsUnlocked(false);
+    setError('');
+    onClose();
+  }, [onClose]);
 
   const memberCount = useMemo(
     () => parseMembers(localConfig.membersText ?? '').length,
@@ -66,7 +75,7 @@ const AdminConfigModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/85 backdrop-blur-[14px] flex items-center justify-center p-8 z-[1200]" role="presentation" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/85 backdrop-blur-[14px] flex items-center justify-center p-8 z-[1200]" role="presentation" onClick={handleClose}>
       <div
         className="bg-card-dark border border-border-muted max-w-[640px] w-full p-8 relative shadow-[0_30px_60px_-35px_rgba(0,0,0,0.7)]"
         role="dialog"
@@ -79,7 +88,7 @@ const AdminConfigModal = ({
             <p className="uppercase tracking-[0.35em] text-[10px] text-text-muted font-bold m-0">Admin da Temporada</p>
             <h3 className="m-0 text-2xl mt-0 uppercase font-black tracking-tighter">Configurar Período e Membros</h3>
           </div>
-          <button className="bg-transparent border border-border-muted text-text-muted font-bold px-4 py-1.5 text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary transition-all" onClick={onClose} type="button">
+          <button className="bg-transparent border border-border-muted text-text-muted font-bold px-4 py-1.5 text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary transition-all" onClick={handleClose} type="button">
             Fechar
           </button>
         </header>
@@ -173,4 +182,4 @@ const AdminConfigModal = ({
   );
 };
 
-export default AdminConfigModal;
+export default memo(AdminConfigModal);
