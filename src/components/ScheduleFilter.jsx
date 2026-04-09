@@ -1,11 +1,13 @@
-import React, { useState, useMemo, useTransition } from 'react';
+import React, { useState, useMemo, useTransition, memo } from 'react';
 import { formatDatePT } from '../utils/dateUtils';
 
-const ScheduleFilter = ({ schedules, onFilterChange }) => {
+const ScheduleFilter = ({ schedules, onFilterChange, selectedMonth, onMonthChange }) => {
   const [mode, setMode] = useState('month');
   const [selectedWeek, setSelectedWeek] = useState('');
-  const [selectedMonth, setSelectedMonth] = useState('');
+  const [internalMonth, setInternalMonth] = useState('');
   const [, startTransition] = useTransition();
+
+  const effectiveMonth = selectedMonth ?? internalMonth;
 
   const weekOptions = useMemo(
     () =>
@@ -54,27 +56,31 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
   const handleModeChange = (m) => {
     setMode(m);
     setSelectedWeek('');
-    setSelectedMonth('');
+    setInternalMonth('');
     onFilterChange(null);
+    if (onMonthChange) onMonthChange('');
   };
 
   const handleWeekChange = (e) => {
     setSelectedWeek(e.target.value);
-    applyFilter('week', e.target.value, selectedMonth);
+    applyFilter('week', e.target.value, effectiveMonth);
   };
 
-  const handleMonthChange = (e) => {
-    setSelectedMonth(e.target.value);
-    applyFilter('month', selectedWeek, e.target.value);
+  const handleMonthChangeInternal = (e) => {
+    const value = e.target.value;
+    setInternalMonth(value);
+    if (onMonthChange) onMonthChange(value);
+    applyFilter('month', selectedWeek, value);
   };
 
   const handleClear = () => {
     setSelectedWeek('');
-    setSelectedMonth('');
+    setInternalMonth('');
+    if (onMonthChange) onMonthChange('');
     onFilterChange(null);
   };
 
-  const hasFilter = selectedWeek || selectedMonth;
+  const hasFilter = selectedWeek || effectiveMonth;
 
   return (
     <div className="bg-card-dark border border-border-muted rounded-sm px-6 py-5 mb-10">
@@ -108,8 +114,8 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
         {mode === 'month' ? (
           <select
             className="flex-1 min-w-[200px] bg-card-dark border border-border-muted rounded-sm text-text-main font-body text-sm py-2.5 px-4 custom-select cursor-pointer transition-all focus:outline-none focus:border-primary hover:border-primary/30 uppercase tracking-wider"
-            value={selectedMonth}
-            onChange={handleMonthChange}
+            value={effectiveMonth}
+            onChange={handleMonthChangeInternal}
             aria-label="Selecionar mês"
           >
             <option value="">SELECIONE O MÊS...</option>
@@ -141,4 +147,4 @@ const ScheduleFilter = ({ schedules, onFilterChange }) => {
   );
 };
 
-export default ScheduleFilter;
+export default memo(ScheduleFilter);

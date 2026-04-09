@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
 import ScheduleCard from './ScheduleCard';
 
-const ScheduleList = ({
+const ScheduleList = memo(function ScheduleList({
   schedules,
   isPast = false,
   activeQuery = '',
   selectedMember = '',
-}) => {
+}) {
   if (!schedules || schedules.length === 0) {
     return (
       <div className="text-center text-lg text-text-muted uppercase tracking-widest font-bold py-16">
@@ -28,6 +28,6 @@ const ScheduleList = ({
       ))}
     </div>
   );
-};
+});
 
 export default ScheduleList;

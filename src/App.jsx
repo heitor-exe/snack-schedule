@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef, memo } from 'react';
 import MemberSelector from './components/MemberSelector';
 import AdminConfigModal from './components/AdminConfigModal';
 import AppHeader from './components/AppHeader';
@@ -43,6 +43,7 @@ function App({ deferredInstallPrompt }) {
     searchUpcoming,
     searchPast,
     displayedUpcoming,
+    isPending,
     handleSearchChange,
     handleFilterChange,
   } = useSearchResults(schedules, currentSchedule);
@@ -99,6 +100,11 @@ function App({ deferredInstallPrompt }) {
     setSelectorOpen(true);
   }, []);
 
+  const handleOpenSelector = useCallback(() => setSelectorOpen(true), []);
+  const handleCloseSelector = useCallback(() => setSelectorOpen(false), []);
+  const handleOpenAdmin = useCallback(() => setAdminOpen(true), []);
+  const handleCloseAdmin = useCallback(() => setAdminOpen(false), []);
+
   const handleApplyAdminConfig = useCallback(
     async (nextConfig) => {
       setIsRegenerating(true);
@@ -117,7 +123,7 @@ function App({ deferredInstallPrompt }) {
         console.error('Erro ao regenerar escala:', error);
         window.alert(
           error?.message ??
-            'Não foi possível regenerar a escala. Confira as policies do Supabase e tente novamente.'
+          'Não foi possível regenerar a escala. Confira as policies do Supabase e tente novamente.'
         );
       } finally {
         setIsRegenerating(false);
@@ -132,8 +138,8 @@ function App({ deferredInstallPrompt }) {
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
         resultCount={isSearchActive ? searchResults?.length ?? 0 : null}
-        onOpenSelector={() => setSelectorOpen(true)}
-        onOpenAdmin={() => setAdminOpen(true)}
+        onOpenSelector={handleOpenSelector}
+        onOpenAdmin={handleOpenAdmin}
         selectedMember={selectedMember}
         onClearSelection={handleClearSelection}
       />
@@ -165,6 +171,7 @@ function App({ deferredInstallPrompt }) {
                 onFilterChange={handleFilterChange}
                 activeQuery={searchQuery}
                 selectedMember={selectedMember}
+                isPending={isPending}
               />
             )}
           </>
@@ -176,14 +183,14 @@ function App({ deferredInstallPrompt }) {
         members={allMembers}
         selectedMember={selectedMember}
         onSelect={handleMemberSelect}
-        onClose={() => setSelectorOpen(false)}
+        onClose={handleCloseSelector}
       />
 
       {adminOpen && (
         <AdminConfigModal
           isOpen={adminOpen}
           currentConfig={seasonConfig}
-          onClose={() => setAdminOpen(false)}
+          onClose={handleCloseAdmin}
           onApply={handleApplyAdminConfig}
           adminPassword={adminPassword}
           isSaving={isRegenerating}
@@ -196,4 +203,4 @@ function App({ deferredInstallPrompt }) {
   );
 }
 
-export default App;
+export default memo(App);

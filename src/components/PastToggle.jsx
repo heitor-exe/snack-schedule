@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-export default function PastToggle({
+export default memo(function PastToggle({
   isOpen,
   onToggle,
   count,
@@ -32,4 +32,4 @@ export default function PastToggle({
       </button>
     </div>
   );
-}
+});

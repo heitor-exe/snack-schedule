@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { formatDatePT } from '../utils/dateUtils';
 import { getRoleForSchedule, getRoleLabel } from '../utils/userUtils';
 import { normalize } from '../utils/filterUtils';
@@ -19,7 +19,7 @@ const getDaysLabel = (days) => {
   return `HÁ ${Math.abs(days)} DIAS`;
 };
 
-const NameTag = ({ name, isSelected, isSearchMatch, role }) => {
+const NameTag = memo(function NameTag({ name, isSelected, isSearchMatch, role }) {
   if (isSearchMatch) {
     return (
       <span className="text-search-highlight bg-search-highlight/10 border border-search-highlight/40 font-bold px-2 py-0.5 rounded-sm shadow-[0_0_12px_rgba(255,51,102,0.3)]">
@@ -53,9 +53,9 @@ const NameTag = ({ name, isSelected, isSearchMatch, role }) => {
     );
   }
   return <span className="text-text-muted">{name}</span>;
-};
+});
 
-const TeamNames = ({ names, selectedMember, activeQuery, role }) => {
+const TeamNames = memo(function TeamNames({ names, selectedMember, activeQuery, role }) {
   if (!selectedMember && !activeQuery) {
     return <p className="text-sm font-bold leading-relaxed text-text-main">{names.join(', ')}</p>;
   }
@@ -75,9 +75,9 @@ const TeamNames = ({ names, selectedMember, activeQuery, role }) => {
       ))}
     </p>
   );
-};
+});
 
-const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) => {
+const CurrentWeekCard = memo(function CurrentWeekCard({ schedule, selectedMember = '', activeQuery = '' }) {
   if (!schedule) return null;
 
   const { date, food_team = [], drink_team = [], free_team = [] } = schedule;
@@ -157,9 +157,9 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
         {/* User status */}
         {selectedMember && (
           <div className={`mt-6 flex flex-wrap items-center gap-3 px-4 py-3 rounded-sm border ${userRole === 'food' ? 'bg-food/5 border-food/30' :
-              userRole === 'drink' ? 'bg-drink/5 border-drink/30' :
-                userRole === 'free' ? 'bg-primary/5 border-primary/30' :
-                  'bg-card-dark border-border-muted'
+            userRole === 'drink' ? 'bg-drink/5 border-drink/30' :
+              userRole === 'free' ? 'bg-primary/5 border-primary/30' :
+                'bg-card-dark border-border-muted'
             }`}>
             <span className="text-text-muted text-sm">
               Identificado como<strong className="text-text-main ml-1">{selectedMember}</strong>
@@ -181,6 +181,6 @@ const CurrentWeekCard = ({ schedule, selectedMember = '', activeQuery = '' }) =>
       </div>
     </section>
   );
-};
+});
 
 export default CurrentWeekCard;

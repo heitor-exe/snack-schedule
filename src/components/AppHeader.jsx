@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-export default function AppHeader({
+export default memo(function AppHeader({
   searchQuery,
   onSearchChange,
   resultCount,
@@ -112,4 +112,4 @@ export default function AppHeader({
       )}
     </header>
   );
-}
+});
