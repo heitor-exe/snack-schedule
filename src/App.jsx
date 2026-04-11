@@ -7,6 +7,7 @@ import LoadingState from './components/LoadingState';
 import SearchModeView from './components/SearchModeView';
 import NormalModeView from './components/NormalModeView';
 import PwaInstallBanner from './components/PwaInstallBanner';
+import PwaUpdateBanner from './components/PwaUpdateBanner';
 import { useSchedules } from './hooks/useSchedules';
 import { useSeasonConfig } from './hooks/useSeasonConfig';
 import { useCurrentSchedule } from './hooks/useCurrentSchedule';
@@ -199,6 +200,7 @@ function App({ deferredInstallPrompt }) {
 
       <AppFooter />
       <PwaInstallBanner deferredInstallPrompt={deferredInstallPrompt} />
+      <PwaUpdateBanner />
     </div>
   );
 }

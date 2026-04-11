@@ -12,16 +12,23 @@ if ('beforeinstallprompt' in window) {
   });
 }
 
+let updateSWFn = null;
 if ('serviceWorker' in navigator) {
-  registerSW({
+  updateSWFn = registerSW({
     onNeedRefresh() {
-      console.log('Nova versao disponivel. Recarregue para atualizar.')
+      // Mostra banner de atualização para o usuário
+      if (window.__showUpdateBanner) {
+        window.__showUpdateBanner();
+      }
     },
     onOfflineReady() {
       console.log('App disponivel para uso offline.')
     },
   })
 }
+
+// Expõe a função de atualização globalmente para o App
+window.__updateSW = updateSWFn;
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
