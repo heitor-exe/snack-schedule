@@ -4,6 +4,12 @@ import { normalize } from '../utils/filterUtils';
 
 const DAY_LABELS = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
 
+const ROLE_ICONS = {
+  food: 'restaurant',
+  drink: 'local_drink',
+  free: 'bedtime',
+};
+
 const ROLE_CLASSES = {
   food: 'text-food bg-food/10 border-food/40',
   drink: 'text-drink bg-drink/10 border-drink/40',
@@ -17,7 +23,7 @@ const ROLE_SHADOWS = {
 };
 
 const CALENDAR_SKELETON_CELLS = Array.from({ length: 35 }, (_, i) => (
-  <div key={i} className="bg-card-dark min-h-[80px] px-2 py-1">
+  <div key={i} className="bg-card-dark min-h-[60px] sm:min-h-[80px] px-1 sm:px-2 py-1">
     <div className="w-5 h-3 bg-text-muted/10 rounded-sm animate-pulse mb-1" />
     <div className="flex gap-0.5 flex-wrap">
       <div className="w-10 h-3 bg-text-muted/10 rounded-sm animate-pulse" />
@@ -86,16 +92,16 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
   if (loading) {
     return (
       <div className="bg-card-dark border border-border-muted rounded-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-border-muted flex items-center justify-between">
+        <div className="px-3 sm:px-6 py-4 border-b border-border-muted flex items-center justify-between">
           <div className="w-6 h-6 bg-text-muted/10 rounded-sm animate-pulse" />
-          <div className="w-48 h-6 bg-text-muted/10 rounded-sm animate-pulse" />
+          <div className="w-32 sm:w-48 h-6 bg-text-muted/10 rounded-sm animate-pulse" />
           <div className="w-6 h-6 bg-text-muted/10 rounded-sm animate-pulse" />
         </div>
         <div className="grid grid-cols-7 gap-px bg-border-muted">
           {DAY_LABELS.map((label) => (
             <div
               key={label}
-              className="bg-card-dark px-2 py-3 text-center text-[10px] font-black text-text-muted uppercase tracking-widest"
+              className="bg-card-dark px-1 sm:px-2 py-2 sm:py-3 text-center text-[8px] sm:text-[10px] font-black text-text-muted uppercase tracking-widest"
             >
               {label}
             </div>
@@ -109,7 +115,7 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
   if (!hasAnySchedule) {
     return (
       <div className="bg-card-dark border border-border-muted rounded-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-border-muted flex items-center justify-between">
+        <div className="px-3 sm:px-6 py-4 border-b border-border-muted flex items-center justify-between">
           <button
             type="button"
             onClick={onPrevMonth}
@@ -118,7 +124,7 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
           >
             <span className="material-symbols-outlined text-lg">chevron_left</span>
           </button>
-          <h3 className="text-lg font-black text-text-main uppercase tracking-tighter">
+          <h3 className="text-sm sm:text-lg font-black text-text-main uppercase tracking-tighter">
             {monthLabel}
           </h3>
           <button
@@ -130,9 +136,9 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
             <span className="material-symbols-outlined text-lg">chevron_right</span>
           </button>
         </div>
-        <div className="px-6 py-12 text-center">
-          <span className="material-symbols-outlined text-4xl text-text-muted mb-3">event_busy</span>
-          <p className="text-text-muted uppercase tracking-widest text-sm font-black">
+        <div className="px-3 sm:px-6 py-8 sm:py-12 text-center">
+          <span className="material-symbols-outlined text-3xl sm:text-4xl text-text-muted mb-3">event_busy</span>
+          <p className="text-text-muted uppercase tracking-widest text-xs sm:text-sm font-black">
             NENHUMA ESCALA NESTE MÊS
           </p>
         </div>
@@ -142,7 +148,7 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
 
   return (
     <div className="bg-card-dark border border-border-muted rounded-sm overflow-hidden">
-      <div className="px-6 py-4 border-b border-border-muted flex items-center justify-between">
+      <div className="px-3 sm:px-6 py-4 border-b border-border-muted flex items-center justify-between">
         <button
           type="button"
           onClick={onPrevMonth}
@@ -151,7 +157,7 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
         >
           <span className="material-symbols-outlined text-lg">chevron_left</span>
         </button>
-        <h3 className="text-lg font-black text-text-main uppercase tracking-tighter">
+        <h3 className="text-sm sm:text-lg font-black text-text-main uppercase tracking-tighter">
           {monthLabel}
         </h3>
         <button
@@ -168,7 +174,7 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
         {DAY_LABELS.map((label) => (
           <div
             key={label}
-            className="bg-card-dark px-2 py-3 text-center text-[10px] font-black text-text-muted uppercase tracking-widest"
+            className="bg-card-dark px-1 sm:px-2 py-2 sm:py-3 text-center text-[8px] sm:text-[10px] font-black text-text-muted uppercase tracking-widest"
           >
             {label}
           </div>
@@ -181,7 +187,7 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
 
           for (let i = 0; i < firstDay; i++) {
             cells.push(
-              <div key={`empty-${i}`} className="bg-card-dark min-h-[80px] opacity-30" />,
+              <div key={`empty-${i}`} className="bg-card-dark min-h-[60px] sm:min-h-[80px] opacity-30" />,
             );
           }
 
@@ -195,7 +201,7 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
 
             if (!isFriday) {
               cells.push(
-                <div key={day} className="bg-card-dark min-h-[80px]" />,
+                <div key={day} className="bg-card-dark min-h-[60px] sm:min-h-[80px]" />,
               );
               continue;
             }
@@ -203,9 +209,9 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
             cells.push(
               <div
                 key={key}
-                className={`bg-card-dark min-h-[80px] px-2 py-1 transition-all ${pastFriday ? 'opacity-50' : ''} ${today ? 'ring-1 ring-primary' : ''}`}
+                className={`bg-card-dark min-h-[60px] sm:min-h-[80px] px-1 sm:px-2 py-1 transition-all ${pastFriday ? 'opacity-50' : ''} ${today ? 'ring-1 ring-primary' : ''}`}
               >
-                <span className="text-[10px] text-text-muted font-black block mb-1">
+                <span className="text-[9px] sm:text-[10px] text-text-muted font-black block mb-1">
                   {day}
                 </span>
 
@@ -225,7 +231,7 @@ export default memo(function CalendarView({ schedules, month, selectedMember, ac
                     />
                   )
                 ) : (
-                  <span className="text-[9px] text-text-muted/30 uppercase">—</span>
+                  <span className="text-[8px] sm:text-[9px] text-text-muted/30 uppercase">—</span>
                 )}
               </div>,
             );
@@ -246,20 +252,21 @@ const MemberCell = memo(function MemberCell({ schedule, member, activeQuery, isP
     );
   }
 
-  const label = getRoleLabel(role);
   const classes = ROLE_CLASSES[role];
   const isMatch = activeQuery && normalize(member).includes(normalize(activeQuery));
 
   return (
     <div
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-sm border text-[9px] font-black uppercase tracking-wider ${classes}`}
-      style={{ boxShadow: isPastDate ? 'none' : `0 0 8px ${ROLE_SHADOWS[role]}` }}
+      className={`inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-sm border ${classes} group relative cursor-default`}
+      style={{ boxShadow: isPastDate ? 'none' : `0 0 6px ${ROLE_SHADOWS[role]}` }}
+      title={member}
     >
-      {isMatch ? (
-        <span className="text-search-highlight">{label}</span>
-      ) : (
-        <span>{label}</span>
-      )}
+      <span
+        className={`material-symbols-outlined text-[10px] sm:text-[11px] ${isMatch ? 'text-search-highlight' : ''}`}
+        aria-label={getRoleLabel(role)}
+      >
+        {ROLE_ICONS[role]}
+      </span>
     </div>
   );
 });
@@ -271,25 +278,42 @@ const OverviewCell = memo(function OverviewCell({ schedule, activeQuery, isPastD
     ...schedule.free_team.map((n) => ({ name: n, role: 'free' })),
   ];
 
+  const roleCounts = { food: 0, drink: 0, free: 0 };
+  allMembers.forEach(({ role }) => { roleCounts[role]++; });
+
+  const matchCount = { food: 0, drink: 0, free: 0 };
+  if (activeQuery) {
+    allMembers.forEach(({ name, role }) => {
+      if (normalize(name).includes(normalize(activeQuery))) {
+        matchCount[role]++;
+      }
+    });
+  }
+
+  const hasMatch = activeQuery && Object.values(matchCount).some((c) => c > 0);
+
   return (
-    <div className="flex flex-wrap gap-0.5">
-      {allMembers.map(({ name, role }) => {
+    <div className="flex flex-col gap-1">
+      {['food', 'drink', 'free'].map((role) => {
         const classes = ROLE_CLASSES[role];
-        const isMatch = activeQuery && normalize(name).includes(normalize(activeQuery));
+        const isMatch = hasMatch && matchCount[role] > 0;
         return (
-          <span
-            key={name}
-            className={`inline-block overflow-hidden truncate px-1.5 py-0.5 rounded-sm border text-[8px] font-black uppercase tracking-wider w-[60px] sm:w-[75px] ${classes}`}
+          <div
+            key={role}
+            className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-sm border text-[8px] sm:text-[9px] font-black uppercase tracking-wider ${classes}`}
             style={{ boxShadow: isPastDate ? 'none' : `0 0 4px ${ROLE_SHADOWS[role]}` }}
-            title={name}
-            aria-label={name}
+            title={`${getRoleLabel(role)}: ${schedule[`${role}_team`].join(', ')}`}
+            aria-label={`${getRoleLabel(role)}: ${schedule[`${role}_team`].join(', ')}`}
           >
-            {isMatch ? (
-              <span className="text-search-highlight">{name.split(' ')[0]}</span>
-            ) : (
-              <span>{name.split(' ')[0]}</span>
-            )}
-          </span>
+            <span
+              className={`material-symbols-outlined text-[9px] sm:text-[11px] ${isMatch ? 'text-search-highlight' : ''}`}
+            >
+              {ROLE_ICONS[role]}
+            </span>
+            <span className={isMatch ? 'text-search-highlight' : ''}>
+              {roleCounts[role]}
+            </span>
+          </div>
         );
       })}
     </div>
