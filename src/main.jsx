@@ -19,17 +19,7 @@ if ('serviceWorker' in navigator) {
     onNeedRefresh() {
       // Mostra banner de atualização para o usuário
       if (window.__showUpdateBanner) {
-        navigator.serviceWorker.getRegistration('/').then((reg) => {
-          const swUrl = reg?.active?.scriptUrl;
-          if (swUrl) {
-            fetch(swUrl, { cache: 'no-store' }).then((r) => {
-              const version = r.headers.get('etag') || r.headers.get('last-modified') || swUrl;
-              window.__showUpdateBanner(version);
-            });
-          } else {
-            window.__showUpdateBanner(Date.now().toString());
-          }
-        });
+        window.__showUpdateBanner();
       }
     },
     onOfflineReady() {
@@ -45,7 +35,7 @@ window.__updateSW = updateSWFn;
 if ('serviceWorker' in navigator && 'addEventListener' in window) {
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && updateSWFn) {
-      updateSWFn(true); // true = skipWaiting, força verificação
+      updateSWFn(); // Verifica sem forçar reload
     }
   });
 }
@@ -53,7 +43,7 @@ if ('serviceWorker' in navigator && 'addEventListener' in window) {
 // Verificação periódica a cada 5 minutos para quem deixa o app aberto
 if (updateSWFn) {
   setInterval(() => {
-    updateSWFn(true);
+    updateSWFn(); // Verifica sem forçar reload
   }, 5 * 60 * 1000); // 5 minutos
 }
 

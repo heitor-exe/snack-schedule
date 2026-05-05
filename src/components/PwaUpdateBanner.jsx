@@ -1,18 +1,15 @@
-import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 
-const SW_VERSION_KEY = 'pwa-sw-version';
+const DISMISS_KEY = 'pwa-update-dismissed';
 
 function PwaUpdateBanner() {
   const [visible, setVisible] = useState(false);
-  const dismissed = useRef(false);
 
   useEffect(() => {
-    window.__showUpdateBanner = (swVersion) => {
-      if (dismissed.current) return;
-      const lastVersion = localStorage.getItem(SW_VERSION_KEY);
-      if (lastVersion === swVersion) return;
-      localStorage.setItem(SW_VERSION_KEY, swVersion);
-      setVisible(true);
+    window.__showUpdateBanner = () => {
+      if (!sessionStorage.getItem(DISMISS_KEY)) {
+        setVisible(true);
+      }
     };
     return () => {
       window.__showUpdateBanner = null;
@@ -20,8 +17,7 @@ function PwaUpdateBanner() {
   }, []);
 
   const handleUpdate = useCallback(() => {
-    localStorage.removeItem(SW_VERSION_KEY);
-    dismissed.current = false;
+    sessionStorage.removeItem(DISMISS_KEY);
     if (window.__updateSW) {
       window.__updateSW(true);
     }
@@ -29,7 +25,7 @@ function PwaUpdateBanner() {
 
   const handleDismiss = useCallback(() => {
     setVisible(false);
-    dismissed.current = true;
+    sessionStorage.setItem(DISMISS_KEY, '1');
   }, []);
 
   if (!visible) return null;
