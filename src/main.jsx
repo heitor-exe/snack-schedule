@@ -15,9 +15,11 @@ if ('beforeinstallprompt' in window) {
 let updateSWFn = null;
 if ('serviceWorker' in navigator) {
   updateSWFn = registerSW({
-    immediate: true, // Verifica atualização imediatamente ao registrar
+    // Verifica atualização do SW assim que o app carrega.
+    immediate: true,
+    // Disposto quando o SW detecta uma nova versão em cache.
+    // O banner (PwaUpdateBanner) decide se deve mostrar com base no localStorage.
     onNeedRefresh() {
-      // Mostra banner de atualização para o usuário
       if (window.__showUpdateBanner) {
         window.__showUpdateBanner();
       }
@@ -30,22 +32,6 @@ if ('serviceWorker' in navigator) {
 
 // Expõe a função de atualização globalmente para o App
 window.__updateSW = updateSWFn;
-
-// Verifica atualização sempre que o app voltar ao foco (abrir, trocar de aba, etc.)
-if ('serviceWorker' in navigator && 'addEventListener' in window) {
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && updateSWFn) {
-      updateSWFn(); // Verifica sem forçar reload
-    }
-  });
-}
-
-// Verificação periódica a cada 5 minutos para quem deixa o app aberto
-if (updateSWFn) {
-  setInterval(() => {
-    updateSWFn(); // Verifica sem forçar reload
-  }, 5 * 60 * 1000); // 5 minutos
-}
 
 // Register Supabase heartbeat service worker (prevents project hibernation)
 if ('serviceWorker' in navigator) {
