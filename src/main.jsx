@@ -19,7 +19,17 @@ if ('serviceWorker' in navigator) {
     onNeedRefresh() {
       // Mostra banner de atualização para o usuário
       if (window.__showUpdateBanner) {
-        window.__showUpdateBanner();
+        navigator.serviceWorker.getRegistration('/').then((reg) => {
+          const swUrl = reg?.active?.scriptUrl;
+          if (swUrl) {
+            fetch(swUrl, { cache: 'no-store' }).then((r) => {
+              const version = r.headers.get('etag') || r.headers.get('last-modified') || swUrl;
+              window.__showUpdateBanner(version);
+            });
+          } else {
+            window.__showUpdateBanner(Date.now().toString());
+          }
+        });
       }
     },
     onOfflineReady() {
@@ -45,6 +55,32 @@ if (updateSWFn) {
   setInterval(() => {
     updateSWFn(true);
   }, 5 * 60 * 1000); // 5 minutos
+}
+
+// Register Supabase heartbeat service worker (prevents project hibernation)
+if ('serviceWorker' in navigator) {
+  const heartbeatConfig = {
+    type: 'HEARTBEAT_CONFIG',
+    url: import.meta.env.VITE_SUPABASE_URL,
+    key: import.meta.env.VITE_SUPABASE_ANON_KEY,
+  };
+  navigator.serviceWorker
+    .register('/supabase-heartbeat.js', { scope: '/' })
+    .then((registration) => {
+      // Send config once the SW is active (poll briefly for activation)
+      if (registration.active) {
+        registration.active.postMessage(heartbeatConfig);
+      } else {
+        const check = setInterval(() => {
+          if (registration.active) {
+            clearInterval(check);
+            registration.active.postMessage(heartbeatConfig);
+          }
+        }, 100);
+        setTimeout(() => clearInterval(check), 5000);
+      }
+    })
+    .catch(() => {});
 }
 
 createRoot(document.getElementById('root')).render(

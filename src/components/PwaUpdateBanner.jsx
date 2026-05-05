@@ -1,24 +1,35 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
+
+const SW_VERSION_KEY = 'pwa-sw-version';
 
 function PwaUpdateBanner() {
   const [visible, setVisible] = useState(false);
+  const dismissed = useRef(false);
 
   useEffect(() => {
-    // Registra o callback global que o service worker chama
-    window.__showUpdateBanner = () => setVisible(true);
+    window.__showUpdateBanner = (swVersion) => {
+      if (dismissed.current) return;
+      const lastVersion = localStorage.getItem(SW_VERSION_KEY);
+      if (lastVersion === swVersion) return;
+      localStorage.setItem(SW_VERSION_KEY, swVersion);
+      setVisible(true);
+    };
     return () => {
       window.__showUpdateBanner = null;
     };
   }, []);
 
   const handleUpdate = useCallback(() => {
+    localStorage.removeItem(SW_VERSION_KEY);
+    dismissed.current = false;
     if (window.__updateSW) {
-      window.__updateSW(true); // true = skipWaiting, força reload imediato
+      window.__updateSW(true);
     }
   }, []);
 
   const handleDismiss = useCallback(() => {
     setVisible(false);
+    dismissed.current = true;
   }, []);
 
   if (!visible) return null;
