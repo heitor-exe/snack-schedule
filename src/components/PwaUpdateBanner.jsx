@@ -1,13 +1,21 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
 
-const DISMISS_KEY = 'pwa-update-dismissed';
+// Chave persistente em localStorage.
+// Uma vez que o banner aparece, essa chave é setada e o banner não aparece
+// novamente até que o usuário limpe o localStorage. Isso evita que o
+// onNeedRefresh dispare o banner a cada reload (ex: após clicar "Atualizar Agora").
+const SEEN_KEY = 'pwa-update-seen-sw';
 
 function PwaUpdateBanner() {
   const [visible, setVisible] = useState(false);
 
+  // Expõe __showUpdateBanner para main.jsx (registerSW → onNeedRefresh).
+  // Só mostra o banner se SEEN_KEY não existe — ou seja, o usuário ainda não
+  // viu o banner nesta sessão de instalação.
   useEffect(() => {
     window.__showUpdateBanner = () => {
-      if (!sessionStorage.getItem(DISMISS_KEY)) {
+      const seenVersion = localStorage.getItem(SEEN_KEY);
+      if (!seenVersion) {
         setVisible(true);
       }
     };
@@ -16,17 +24,27 @@ function PwaUpdateBanner() {
     };
   }, []);
 
+  // "Atualizar Agora": recarrega a página com o novo SW.
+  // Não limpa SEEN_KEY — o banner não reaparece após o reload.
   const handleUpdate = useCallback(() => {
-    sessionStorage.removeItem(DISMISS_KEY);
     if (window.__updateSW) {
       window.__updateSW(true);
     }
   }, []);
 
+  // "Depois": esconde o banner e marca como visto.
   const handleDismiss = useCallback(() => {
     setVisible(false);
-    sessionStorage.setItem(DISMISS_KEY, '1');
+    localStorage.setItem(SEEN_KEY, '1');
   }, []);
+
+  // Assim que o banner aparece, marca como visto em localStorage.
+  // Isso impede que onNeedRefresh mostre o banner novamente após o reload.
+  useEffect(() => {
+    if (visible) {
+      localStorage.setItem(SEEN_KEY, '1');
+    }
+  }, [visible]);
 
   if (!visible) return null;
 
