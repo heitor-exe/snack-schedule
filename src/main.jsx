@@ -19,7 +19,17 @@ if ('serviceWorker' in navigator) {
     onNeedRefresh() {
       // Mostra banner de atualização para o usuário
       if (window.__showUpdateBanner) {
-        window.__showUpdateBanner();
+        navigator.serviceWorker.getRegistration('/').then((reg) => {
+          const swUrl = reg?.active?.scriptUrl;
+          if (swUrl) {
+            fetch(swUrl, { cache: 'no-store' }).then((r) => {
+              const version = r.headers.get('etag') || r.headers.get('last-modified') || swUrl;
+              window.__showUpdateBanner(version);
+            });
+          } else {
+            window.__showUpdateBanner(Date.now().toString());
+          }
+        });
       }
     },
     onOfflineReady() {
