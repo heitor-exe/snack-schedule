@@ -1,10 +1,15 @@
-import React, { useState, useMemo, useTransition, memo } from 'react';
-import { formatDatePT } from '../utils/dateUtils';
+import React, { useState, useMemo, useTransition, memo } from "react";
+import { formatDatePT } from "../utils/dateUtils";
 
-const ScheduleFilter = ({ schedules, onFilterChange, selectedMonth, onMonthChange }) => {
-  const [mode, setMode] = useState('month');
-  const [selectedWeek, setSelectedWeek] = useState('');
-  const [internalMonth, setInternalMonth] = useState('');
+const ScheduleFilter = ({
+  schedules,
+  onFilterChange,
+  selectedMonth,
+  onMonthChange,
+}) => {
+  const [mode, setMode] = useState("month");
+  const [selectedWeek, setSelectedWeek] = useState("");
+  const [internalMonth, setInternalMonth] = useState("");
   const [, startTransition] = useTransition();
 
   const effectiveMonth = selectedMonth ?? internalMonth;
@@ -13,7 +18,7 @@ const ScheduleFilter = ({ schedules, onFilterChange, selectedMonth, onMonthChang
     () =>
       schedules.map((s) => ({
         value: s.date,
-        label: formatDatePT(new Date(s.date + 'T00:00:00')).toUpperCase(),
+        label: formatDatePT(new Date(s.date + "T00:00:00")).toUpperCase(),
       })),
     [schedules],
   );
@@ -22,15 +27,18 @@ const ScheduleFilter = ({ schedules, onFilterChange, selectedMonth, onMonthChang
     const seen = new Set();
     const opts = [];
     schedules.forEach((s) => {
-      const d = new Date(s.date + 'T00:00:00');
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const d = new Date(s.date + "T00:00:00");
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
       if (!seen.has(key)) {
         seen.add(key);
-        const label = new Intl.DateTimeFormat('pt-BR', {
-          month: 'long',
-          year: 'numeric',
+        const label = new Intl.DateTimeFormat("pt-BR", {
+          month: "long",
+          year: "numeric",
         }).format(d);
-        opts.push({ value: key, label: label.charAt(0).toUpperCase() + label.slice(1) });
+        opts.push({
+          value: key,
+          label: label.charAt(0).toUpperCase() + label.slice(1),
+        });
       }
     });
     return opts;
@@ -38,14 +46,17 @@ const ScheduleFilter = ({ schedules, onFilterChange, selectedMonth, onMonthChang
 
   const applyFilter = (newMode, week, month) => {
     startTransition(() => {
-      if (newMode === 'week') {
+      if (newMode === "week") {
         onFilterChange(week ? schedules.filter((s) => s.date === week) : null);
       } else {
-        if (!month) { onFilterChange(null); return; }
+        if (!month) {
+          onFilterChange(null);
+          return;
+        }
         onFilterChange(
           schedules.filter((s) => {
-            const d = new Date(s.date + 'T00:00:00');
-            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            const d = new Date(s.date + "T00:00:00");
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
             return key === month;
           }),
         );
@@ -55,28 +66,28 @@ const ScheduleFilter = ({ schedules, onFilterChange, selectedMonth, onMonthChang
 
   const handleModeChange = (m) => {
     setMode(m);
-    setSelectedWeek('');
-    setInternalMonth('');
+    setSelectedWeek("");
+    setInternalMonth("");
     onFilterChange(null);
-    if (onMonthChange) onMonthChange('');
+    if (onMonthChange) onMonthChange("");
   };
 
   const handleWeekChange = (e) => {
     setSelectedWeek(e.target.value);
-    applyFilter('week', e.target.value, effectiveMonth);
+    applyFilter("week", e.target.value, effectiveMonth);
   };
 
   const handleMonthChangeInternal = (e) => {
     const value = e.target.value;
     setInternalMonth(value);
     if (onMonthChange) onMonthChange(value);
-    applyFilter('month', selectedWeek, value);
+    applyFilter("month", selectedWeek, value);
   };
 
   const handleClear = () => {
-    setSelectedWeek('');
-    setInternalMonth('');
-    if (onMonthChange) onMonthChange('');
+    setSelectedWeek("");
+    setInternalMonth("");
+    if (onMonthChange) onMonthChange("");
     onFilterChange(null);
   };
 
@@ -87,22 +98,26 @@ const ScheduleFilter = ({ schedules, onFilterChange, selectedMonth, onMonthChang
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 border-b border-border-muted pb-4">
         <div className="space-y-1">
           <h2 className="text-2xl font-black flex items-center gap-3 text-text-main uppercase tracking-tighter">
-            <span className="material-symbols-outlined text-primary">calendar_month</span>
+            <span className="material-symbols-outlined text-primary">
+              calendar_month
+            </span>
             Próximas Datas
           </h2>
-          <p className="text-xs text-text-muted uppercase tracking-[0.2em] font-medium">Cronograma de Operações Mensais</p>
+          <p className="text-xs text-text-muted uppercase tracking-[0.2em] font-medium">
+            Cronograma de Operações Mensais
+          </p>
         </div>
         <div className="flex items-center bg-card-dark border border-border-muted p-1">
           <button
-            className={`px-4 py-1.5 font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'month' ? 'bg-primary text-background-dark' : 'text-text-muted hover:text-white'}`}
-            onClick={() => handleModeChange('month')}
+            className={`px-4 py-1.5 font-black text-[10px] uppercase tracking-widest transition-all ${mode === "month" ? "bg-primary text-background-dark" : "text-text-muted hover:text-white"}`}
+            onClick={() => handleModeChange("month")}
             type="button"
           >
             Mês
           </button>
           <button
-            className={`px-4 py-1.5 font-black text-[10px] uppercase tracking-widest transition-all ${mode === 'week' ? 'bg-primary text-background-dark' : 'text-text-muted hover:text-white'}`}
-            onClick={() => handleModeChange('week')}
+            className={`px-4 py-1.5 font-black text-[10px] uppercase tracking-widest transition-all ${mode === "week" ? "bg-primary text-background-dark" : "text-text-muted hover:text-white"}`}
+            onClick={() => handleModeChange("week")}
             type="button"
           >
             Semana
@@ -111,34 +126,42 @@ const ScheduleFilter = ({ schedules, onFilterChange, selectedMonth, onMonthChang
       </div>
 
       <div className="flex items-center gap-3 flex-wrap">
-        {mode === 'month' ? (
+        {mode === "month" ? (
           <select
-            className="flex-1 min-w-[200px] bg-card-dark border border-border-muted rounded-sm text-text-main font-body text-sm py-2.5 px-4 custom-select cursor-pointer transition-all focus:outline-none focus:border-primary hover:border-primary/30 uppercase tracking-wider"
+            className="flex-1 min-w-50 bg-card-dark border border-border-muted rounded-sm text-text-main font-body text-sm py-2.5 px-4 custom-select cursor-pointer transition-all focus:outline-none focus:border-primary hover:border-primary/30 uppercase tracking-wider"
             value={effectiveMonth}
             onChange={handleMonthChangeInternal}
             aria-label="Selecionar mês"
           >
             <option value="">SELECIONE O MÊS...</option>
             {monthOptions.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
             ))}
           </select>
         ) : (
           <select
-            className="flex-1 min-w-[200px] bg-card-dark border border-border-muted rounded-sm text-text-main font-body text-sm py-2.5 px-4 custom-select cursor-pointer transition-all focus:outline-none focus:border-primary hover:border-primary/30 uppercase tracking-wider"
+            className="flex-1 min-w-50 bg-card-dark border border-border-muted rounded-sm text-text-main font-body text-sm py-2.5 px-4 custom-select cursor-pointer transition-all focus:outline-none focus:border-primary hover:border-primary/30 uppercase tracking-wider"
             value={selectedWeek}
             onChange={handleWeekChange}
             aria-label="Selecionar semana"
           >
             <option value="">SELECIONE A SEXTA-FEIRA...</option>
             {weekOptions.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
             ))}
           </select>
         )}
 
         {hasFilter && (
-          <button className="bg-primary/10 border border-primary/30 text-primary font-body text-[10px] font-black uppercase tracking-widest py-2.5 px-4 rounded-sm transition-all hover:bg-primary/20 hover:border-primary" onClick={handleClear} type="button">
+          <button
+            className="bg-primary/10 border border-primary/30 text-primary font-body text-[10px] font-black uppercase tracking-widest py-2.5 px-4 rounded-sm transition-all hover:bg-primary/20 hover:border-primary"
+            onClick={handleClear}
+            type="button"
+          >
             ✕ LIMPAR
           </button>
         )}
