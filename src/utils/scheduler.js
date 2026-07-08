@@ -5,7 +5,7 @@ import { MEMBERS } from './constants';
  * across the entire period, with month-aware priority so that each person
  * gets as many free shifts per month as the math allows.
  *
- * Constraints per Friday: 5 food | 3 drink | 7 free  (15 people total)
+ * Constraints per Friday: 6 food | 4 drink | remaining free (for 10+ people)
  *
  * Strategy — Deficit-based greedy with monthly reset:
  *   - Each person tracks a "free score" (how many free shifts they still "owe").
@@ -13,7 +13,7 @@ import { MEMBERS } from './constants';
  *     and those who got zero free shifts the previous month receive a priority bonus.
  *   - Each Friday:
  *       1. Sort people by (monthly_free_remaining DESC, global_free_deficit DESC)
- *       2. Top 5 → free
+ *       2. Top N → free (where N = total_people - 10, minimum 0)
  *       3. From remaining 10, sort by drink_deficit DESC → top 4 → drink
  *       4. Remaining 6 → food
  *
@@ -23,6 +23,12 @@ import { MEMBERS } from './constants';
  */
 export const generateBalancedSchedule = (dates, members = MEMBERS) => {
     const people = [...members];
+    const totalPeople = people.length || 1;
+
+    // Target counts per Friday: 6 food | 4 drink | remaining free (for cells with 10+ members)
+    const numDrink = totalPeople >= 10 ? 4 : Math.max(1, Math.floor(totalPeople * 0.4));
+    const numFood = totalPeople >= 10 ? 6 : Math.max(1, Math.floor(totalPeople * 0.6));
+    const numFree = Math.max(0, totalPeople - numFood - numDrink);
 
     // Per-person running counters
     const totalFood = Object.fromEntries(people.map(p => [p, 0]));
@@ -62,32 +68,32 @@ export const generateBalancedSchedule = (dates, members = MEMBERS) => {
 
         // --- Determine target counts for fair global distribution ---
         // How many total free slots have been distributed so far INCLUDING this Friday?
-        // Ideally each person gets (totalFridays * 5 / 15) free = totalFridays / 3
+        // Ideally each person gets (totalFridays * numFree / totalPeople) free
         // We use the deficit from that ideal to break ties.
 
         // --- Score each person for FREE priority ---
         // Higher score = more deserving of a free shift this week
         const freeScore = (p) => {
-            const idealFree = totalFridays * 7 / 15; // expected free per person so far (7 free slots / 15 people)
+            const idealFree = totalFridays * (numFree / totalPeople);
             const globalDeficit = idealFree - totalFree[p];
             return freeHunger[p] * 10 + globalDeficit * 3 + (monthlyFree[p] === 0 ? 5 : 0) + Math.random() * 0.5;
         };
 
-        // Sort by free priority (desc) — pick top 7
+        // Sort by free priority (desc) — pick top numFree
         const sortedByFree = [...people].sort((a, b) => freeScore(b) - freeScore(a));
-        const freeTeam = sortedByFree.slice(0, 7);
-        const remaining = sortedByFree.slice(7);
+        const freeTeam = sortedByFree.slice(0, numFree);
+        const remaining = sortedByFree.slice(numFree);
 
-        // --- Determine DRINK priority from remaining 10 ---
+        // --- Determine DRINK priority from remaining ---
         const drinkScore = (p) => {
-            const idealDrink = totalFridays * 3 / 15;
+            const idealDrink = totalFridays * (numDrink / totalPeople);
             const globalDeficit = idealDrink - totalDrink[p];
             return globalDeficit + Math.random() * 0.5;
         };
 
         const sortedByDrink = [...remaining].sort((a, b) => drinkScore(b) - drinkScore(a));
-        const drinkTeam = sortedByDrink.slice(0, 3);
-        const foodTeam = sortedByDrink.slice(3); // remaining 5
+        const drinkTeam = sortedByDrink.slice(0, numDrink);
+        const foodTeam = sortedByDrink.slice(numDrink); // remaining (numFood)
 
         // --- Update counters ---
         freeTeam.forEach(p => {
